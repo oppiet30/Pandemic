@@ -25,3 +25,22 @@ active-player, waiting-player, victory and registration screens. Checks also
 confirmed that form identifiers, submitted option values, links and existing
 SQL statements were preserved. A live game against a configured database has
 not been tested as part of the translation.
+
+## Gameplay regression checks
+
+With PHP CLI, MySQLi and a dedicated test MariaDB/MySQL server available:
+
+```bash
+MYSQL_TEST_HOST=127.0.0.1 MYSQL_TEST_USER=root php tests/gameplay.php
+```
+
+Run this from the repository root. Optional variables are `MYSQL_TEST_PORT` and
+`MYSQL_TEST_PASSWORD`. The test creates a randomly named database, imports schema
+and board metadata (not the sample accounts), and drops that database afterward.
+The test account needs permission to create and drop databases. GitHub Actions
+runs it against an isolated MariaDB service on GitHub's servers.
+
+These regressions check startup under strict SQL mode, initial setup, turn
+advancement, epidemic targets, curing and cross-game isolation, four-cure victory,
+defeat JSON responses, and login validation. Passing them does not establish
+complete fidelity to the official board-game rules or a full security review.
