@@ -9,7 +9,7 @@ class API {
         $metodo = key_exists('metodo', $_POST);
         
         if(!$metodo){
-            throw new Exception('Necessario especificar o metodo');
+            throw new Exception('A method is required');
         }
         
         switch($metodo){
@@ -17,7 +17,7 @@ class API {
                 $this->getJogadaActual();
                 break;
             default: 
-                throw new Exception('Metodo invalido');
+                throw new Exception('Invalid method');
         }
         
     }

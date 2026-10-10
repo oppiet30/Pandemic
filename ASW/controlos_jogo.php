@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/display.php';
 
 include_once 'db_config.php';
 
@@ -679,10 +680,10 @@ function verificaConexoes($posicao_actual, $conn) {
 
 // Processa o array com strings de forma a devolver logo os botõees das cidades
     foreach ($conexoes as $conexao) {
-        $string_botoes .= '<button type="button" class="btn btn-info cidade_escolhida" value="' . $conexao . '" >' . $conexao . '</button>';
+        $string_botoes .= '<button type="button" class="btn btn-info cidade_escolhida" value="' . $conexao . '" >' . pandemic_display($conexao) . '</button>';
     }
 
-    $string_botoes .= '<button type="button" class="btn btn-danger cidade_escolhida" id="cancel "value="cancelar" >Cancelar</button>';
+    $string_botoes .= '<button type="button" class="btn btn-danger cidade_escolhida" id="cancel "value="cancelar" >Cancel</button>';
     echo($string_botoes);
 }
 

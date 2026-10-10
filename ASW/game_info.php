@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <?php
     include('headers.php');
     include('functions.php');
@@ -36,17 +36,17 @@
         </style>
 
         <div class="controlos_jogo">
-          <h3>Controlos do Jogo</h3>
-          <button type="button">Tratar uma doença</button>
-          <button type="button">Deslocar para outra cidade</button>
-          <button type="button">Criar centro de Pesquisa</button>
-          <button type="button">Descobrir cura</button>
+          <h3>Game controls</h3>
+          <button type="button">Treat disease</button>
+          <button type="button">Move to another city</button>
+          <button type="button">Build a research station</button>
+          <button type="button">Discover a cure</button>
         </div>
 
         <table id="tabela1">
           <tr>
-            <th>Nome do jogo</th>
-            <th>Hora de inicio do jogo</th>
+            <th>Game name</th>
+            <th>Game start time</th>
           </tr>
           <tr>
             <td> <!--Nome do jogo a ir buscar à base de dados --> </td>
@@ -57,21 +57,21 @@
 
         <table id="tabela_jogadores">
           <tr>
-            <th>Jogadores</th>
-            <th>Cartas</th>
-            <th>Jogador Atual</th>
-            <th>Posição</th>
+            <th>Players</th>
+            <th>Cards</th>
+            <th>Current player</th>
+            <th>Location</th>
           </tr>
           <tr>
-            <td>jogador1</td>
-            <td>Paris, Beijim</td>
-            <td>Sim</td>
+            <td>Player 1</td>
+            <td>Paris, Beijing</td>
+            <td>Yes</td>
             <td>Miami</td>
           </tr>
           <tr>
-            <td>jogador2</td>
-            <td>Roma</td>
-            <td>Não</td>
+            <td>Player 2</td>
+            <td>Rome</td>
+            <td>No</td>
             <td>Miami</td>
           </tr>
         </table>
@@ -80,65 +80,65 @@
 
         <table id="tabela_cidades">
           <tr>
-            <th>Cidade</th>
-            <th>Cor da carta</th>
-            <th>Conexões</th>
-            <th>Centro de Pesquisa</th>
-            <th>Número de doenças</th>
+            <th>City</th>
+            <th>Card color</th>
+            <th>Connections</th>
+            <th>Research station</th>
+            <th>Disease cubes</th>
           </tr>
           <tr>
             <td>Madrid</td>
-            <td>Azul</td>
-            <td>Londres, Paris, New-York </td>
+            <td>Blue</td>
+            <td>London, Paris, New York </td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Atlanta</td>
-            <td>Azul</td>
+            <td>Blue</td>
             <td>Chicago, Miami, Washington </td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Miami</td>
-            <td>Amarelo</td>
+            <td>Yellow</td>
             <td>Washington, Atlanta, Mexico City, Bogotá </td>
             <td>1</td>
             <td>2</td>
           </tr>
           <tr>
             <td>São Paulo</td>
-            <td>Amarelo</td>
+            <td>Yellow</td>
             <td>Buenos Aires, Bogotá, Lagos, Madrid </td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Moscow</td>
-            <td>Preto</td>
+            <td>Black</td>
             <td>St. Petersburg, Istanbul, Tehran</td>
             <td>0</td>
             <td>1</td>
           </tr>
           <tr>
-            <td>Bagdad</td>
-            <td>Preto</td>
+            <td>Baghdad</td>
+            <td>Black</td>
             <td>Tehran, Istanbul, Cairo</td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Tokyo</td>
-            <td>Vermelho</td>
+            <td>Red</td>
             <td>Seoul,Osaka,Shanghai,San Francisco</td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Shanghai</td>
-            <td>Vermelho</td>
-            <td>Hong Kong,Tripei,Tokyo,Sedul,Beijing</td>
+            <td>Red</td>
+            <td>Hong Kong,Taipei,Tokyo,Seoul,Beijing</td>
             <td>1</td>
             <td>2</td>
           </tr>
@@ -148,9 +148,9 @@
 
         <table id="tabela_surtos">
           <tr>
-            <th>Velocidade da infeção</th>
-            <th>Surtos</th>
-            <th>Número de centros de Pesquisa</th>
+            <th>Infection rate</th>
+            <th>Outbreaks</th>
+            <th>Research stations</th>
           </tr>
           <tr>
             <td>3</td>
@@ -162,10 +162,10 @@
         <br>
         <table id="tabela_curas">
           <tr>
-            <th>Cura_Azul</th>
-            <th>Cura_Vermelho</th>
-            <th>Cura_Preto</th>
-            <th>Cura_Amarelo</th>
+            <th>Blue cure</th>
+            <th>Red cure</th>
+            <th>Black cure</th>
+            <th>Yellow cure</th>
           </tr>
           <tr>
             <td></td>

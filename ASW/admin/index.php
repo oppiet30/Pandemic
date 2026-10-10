@@ -2,7 +2,7 @@
 include('../db_config.php');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>Pandemic: Admin</title>
         <meta charset="utf-8">
@@ -15,20 +15,20 @@ include('../db_config.php');
     <body>
         <header>
         <!--<a href="index.php"><img id="logo" src="fundo.jpg"/></a>-->
-            <h1 id="title">Backoffice</h1>
+            <h1 id="title">Administration</h1>
         </header>
         <div class="registo">
-            <h2>Backoffice</h2>
+            <h2>Administration</h2>
             <form action="index.php" method="post" id="registar">
                 <div class="form-group">
-                    <label for="nome">Nome</label>
-                    <input type="text" class="form-control" id="nome" placeholder="nome" name="nome" required>
+                    <label for="nome">Name</label>
+                    <input type="text" class="form-control" id="nome" placeholder="Name" name="nome" required>
                 </div>
                 <div class="form-group">
                     <label for="nome">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="*****" name="password" required>
                 </div>
-                <button type="submit">Entrar</button>
+                <button type="submit">Log in</button>
             </form>
 
         </div>

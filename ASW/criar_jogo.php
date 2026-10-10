@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <?php
     include('headers.php');
     include('functions.php');
@@ -14,18 +14,18 @@
             <h1 id="title">PANDEMIC</h1>
         </header>
         <div id="logs">
-            <button id="botao_logout" href="homepage.php">Voltar</button>
+            <button id="botao_logout" href="homepage.php">Back</button>
         </div>
 
         <div class="registo">
-            <h2>Criar Jogo</h2>
+            <h2>Create game</h2>
             <form id="create_jogo">
                 <div class="form-group">
-                    <label for="nome">Nome:</label>
+                    <label for="nome">Name:</label>
                     <input type="text" class="form-control" required id="nome" name="nome" required>
                 </div>
                 <div class="form-group">
-                    <label for="nome">Descrição:</label>
+                    <label for="nome">Description:</label>
                     <br>
                 </div>
                 <div class="form-group">
@@ -33,7 +33,7 @@
                 </div>
                 <br>
                 <div class="form-group">
-                    <label for="n_jogadores">Número de jogadores:</label>
+                    <label for="n_jogadores">Number of players:</label>
                     <select class="form-control" id="n_jogadores">
                         <option value="2" selected>2</option>
                         <option value="3">3</option>
@@ -41,14 +41,14 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="data">Data para começar o jogo:</label>
+                    <label for="data">Game start date:</label>
                     <input type="date" class="form-control" name="data_inicio" required id="data" />
                 </div>
 
                 <input type="hidden" value="<?php echo $_COOKIE["user"] ?>" id="primeiro_user"/>
 
 
-                <button id="criar_jogo" type="button" class="btn btn-default">Criar</button>
+                <button id="criar_jogo" type="button" class="btn btn-default">Create</button>
 
             </form>
         </div>
@@ -89,10 +89,10 @@
                     success: function (msg) {
                         if (msg == "success") {
                             $('.registo').hide();
-                            $('.criar_jogo_sucesso').append("<div>Jogo criado com sucesso!</div> <br>");
-                            $('.criar_jogo_sucesso').append("<a href='lista_jogos.php' id='botao_logout'>Visitar a lista de jogos</a>");
+                            $('.criar_jogo_sucesso').append("<div>Game created successfully!</div> <br>");
+                            $('.criar_jogo_sucesso').append("<a href='lista_jogos.php' id='botao_logout'>View the game list</a>");
                         } else if (msg == "duplicado") {
-                            $(".erro_duplicado").append("<div>Já existe um jogo com esse nome.</div>");
+                            $(".erro_duplicado").append("<div>A game with that name already exists.</div>");
                         }
                     }
                 });

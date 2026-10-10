@@ -7,19 +7,19 @@
         </div>
 
         <div class="container">
-            <label for="nickname"><b>Nickname</b></label>
-            <input type="text" placeholder="Nickname" id="nickname" name="nickname" required>
+            <label for="nickname"><b>Username</b></label>
+            <input type="text" placeholder="Username" id="nickname" name="nickname" required>
 
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Password" id="password" name="password" required>
             <div class="erro"></div>
-            <button type="button" id="login">Login</button>
+            <button type="button" id="login">Log in</button>
 
         </div>
 
         <div class="container" style="background-color:#f1f1f1">
             <button type="button" onclick="document.getElementById('id01').style.display = 'none'" class="cancelbtn">Cancel</button>
-            <span class="psw"><a href="recover.php">Esqueceu-se da password?</a></span>
+            <span class="psw"><a href="recover.php">Forgot your password?</a></span>
         </div>
     </form>
 </div>
@@ -46,7 +46,7 @@
                 if (msg == "autorizado") {
                     window.location.replace("homepage.php");
                 } else if (msg == "negado") {
-                    $(".erro").append("<div>Ocorreu um erro. Verifique se colocou a password correctamente.</div>");
+                    $(".erro").append("<div>Login failed. Check your username and password.</div>");
                 }
             }
         });

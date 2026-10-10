@@ -16,15 +16,15 @@ $mail->SMTPSecure = "ssl";
 $mail->Host = "smtp.gmail.com";
 $mail->Port = "465";
 $mail->isHTML();
-$mail->Username = "aswgrupo024@gmail.com";
-$mail->Password = "amadubalde";
+$mail->Username = getenv("PANDEMIC_SMTP_USERNAME") ?: "";
+$mail->Password = getenv("PANDEMIC_SMTP_PASSWORD") ?: "";
 $mail->SetFrom("no-reply@pandemic.com");
-$mail->Subject = "Recuperacao da password";
-$mail->Body = "Siga este link para proceguir à recuperação da password: <br>
-              <a href='http://localhost/Projeto/ASW/password_rec.php'>Mudar password</a>";
+$mail->Subject = "Password recovery";
+$mail->Body = "Follow this link to reset your password: <br>
+              <a href='http://localhost/Projeto/ASW/password_rec.php'>Reset password</a>";
 $mail->AddAddress($to);
 
 $mail->Send();
-echo 'E-mail de recuperação enviado com sucesso!';
+echo 'Password recovery email sent successfully!';
 
 ?>

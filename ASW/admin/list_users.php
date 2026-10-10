@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../display.php';
 include('../db_config.php');
 
 if (!isset($_COOKIE['admin'])) {
@@ -18,20 +19,27 @@ foreach ($_POST as $pesquisar => $dados) {
 
 $result_lista = mysqli_query($conn, $query_lista) or die();
 ?>
-<html>
+<html lang="en">
     <?php include 'consts.php'; ?>
     <?php include './headers.php'; ?>
     <body>
         <table>
             <tr>
-                <th>Nº Utilizador</th><th>Nome</th><th>Apelido</th><th>Nickname</th><th>E-mail</th><th>Sexo</th><th>Data de Nascimento</th><th>País</th><th>Distrito</th><th>Concelho<th>Password</th>
+                <th>User ID</th><th>Name</th><th>Last name</th><th>Username</th><th>Email</th><th>Sex</th><th>Date of birth</th><th>Country</th><th>District</th><th>Municipality<th>Password</th>
             </tr>
 
             <?php while ($row = mysqli_fetch_assoc($result_lista)) { ?>
                 <tr>
                     <?php
                     foreach ($row as $campo => $dados) {
-                        echo "<td>" . $dados . "</td>";
+                        if ($campo == 'pais') {
+                            $display = pandemic_display($dados);
+                        } elseif ($campo == 'sexo') {
+                            $display = ($dados == 'm' ? 'Male' : ($dados == 'f' ? 'Female' : htmlspecialchars($dados, ENT_QUOTES, 'UTF-8')));
+                        } else {
+                            $display = htmlspecialchars($dados, ENT_QUOTES, 'UTF-8');
+                        }
+                        echo "<td>" . $display . "</td>";
                     }
                     ?>
                 </tr>
@@ -42,13 +50,13 @@ $result_lista = mysqli_query($conn, $query_lista) or die();
 
         </table>
         <form action="" method="POST">
-            <label for="procurar">Procurar por:</label>
+            <label for="procurar">Search by:</label>
             <select name="procurar">
-                <option value="nome">Nome</option>
-                <option value="pais">País</option>
+                <option value="nome">Name</option>
+                <option value="pais">Country</option>
             </select>
             <input type="text" name="a_procurar" />
-            <button type="submit">Procurar</button>
+            <button type="submit">Search</button>
         </form>
     </body>
 </html>

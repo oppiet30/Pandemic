@@ -5,7 +5,7 @@ if (verificaLoginUser()) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>Pandemic</title>
         <meta charset="utf-8">
@@ -21,7 +21,7 @@ if (verificaLoginUser()) {
             <h1 id="title">PANDEMIC</h1>
         </header>
         <div id="logs">
-            <button id="botao_login" onclick="document.getElementById('id01').style.display = 'block'">Login</button>
+            <button id="botao_login" onclick="document.getElementById('id01').style.display = 'block'">Log in</button>
             <button onclick="location.href = 'register.php'">Register</button>
         </div>
 

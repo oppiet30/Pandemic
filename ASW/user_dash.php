@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Pandemic: Recoverr</title>
+    <title>Pandemic: Profile</title>
     <meta charset="utf-8">
     <link type="text/css" rel="stylesheet" href="style.css"/>
     <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
@@ -20,7 +20,7 @@
   <img id="avatar" class="w3-margin w3-circle" onchange="readURL(this);" src="img_avatar2.png" alt="Avatar"/>
   <br>
   <input type="file" name="pic" accept="image/jpeg">
-  <input type="submit" value="Alterar avatar">
+  <input type="submit" value="Change avatar">
 
 <?php
 ?>

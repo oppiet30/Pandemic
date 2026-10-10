@@ -5,7 +5,7 @@ if (!isset($_COOKIE['admin'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
     <?php include('consts.php'); ?>
     <body>
@@ -15,7 +15,7 @@ if (!isset($_COOKIE['admin'])) {
                 </div>
 
                 <div class="col-lg-1 col-md-1">
-                    <div class="user">Bem vindo, <?php echo $_COOKIE['admin'] ?>!</div>
+                    <div class="user">Welcome, <?php echo $_COOKIE['admin'] ?>!</div>
 
                 </div>
             </div>
@@ -25,10 +25,10 @@ if (!isset($_COOKIE['admin'])) {
             <div class="row>">
                 <div class="col-lg-2 col-md-2" >
                     <div class="row">
-                        <a href="list_users.php"><button class="botaoMenu">Listar Utilizadores</button></a>
+                        <a href="list_users.php"><button class="botaoMenu">List users</button></a>
                     </div>
                     <div class="row">
-                        <a href="list_jogos.php"><button class="botaoMenu">Listar Jogos</button></a>
+                        <a href="list_jogos.php"><button class="botaoMenu">List games</button></a>
                     </div>
 
                 </div>

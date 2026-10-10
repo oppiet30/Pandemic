@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Pandemic</title>
     <meta charset="utf-8">
@@ -15,13 +15,13 @@
             <h1 id="title">PANDEMIC</h1>
         </header>
         <div class="registo">
-            <h2>Recover</h2>
+            <h2>Reset password</h2>
             <form action="send_recover.php" method="post" id="registar">
                 <div class="form-group">
-                    <label for="email">E-mail</label>
+                    <label for="email">Email</label>
                     <input type="email" class="form-control" name="email" required>
                     <br>
-                    <button type="submit" onclick="" class="btn btn-default">Enviar</button>
+                    <button type="submit" onclick="" class="btn btn-default">Send</button>
                 </div>
             </form>
         </div>
