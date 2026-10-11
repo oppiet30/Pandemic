@@ -37,5 +37,9 @@ jobs:
           MYSQL_TEST_HOST: 127.0.0.1
           MYSQL_TEST_USER: root
         run: |
-          PANDEMIC_TEST_LOCALE=en php tests/gameplay.php
-          PANDEMIC_TEST_LOCALE=pt php tests/gameplay.php
+          php tests/migrations.php
+          for schema in fresh migrated; do
+            for locale in en pt; do
+              PANDEMIC_TEST_SCHEMA="$schema" PANDEMIC_TEST_LOCALE="$locale" php tests/gameplay.php
+            done
+          done

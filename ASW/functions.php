@@ -17,11 +17,11 @@ if (isset($_POST['funcao']) && $_POST['funcao'] == 'verificaUltimoJogo') {
 
 function verificaUltimoJogo($total_actual, $conn) {
 //    echo $total_actual;
-    $query_jogos_existentes = "SELECT * FROM jogo";
+    $query_jogos_existentes = "SELECT * FROM games";
     $executa_query = mysqli_query($conn, $query_jogos_existentes);
     $total_mais_recente = mysqli_num_rows($executa_query);
     if ($total_actual != $total_mais_recente) {
-        $query_jogos_actualizados = "SELECT id, nome, descricao, jogadores_actuais, n_jogadores, data_comeco, criador FROM jogo ORDER BY id DESC LIMIT 1";
+        $query_jogos_actualizados = "SELECT id, nome, descricao, jogadores_actuais, n_jogadores, data_comeco, criador FROM games ORDER BY id DESC LIMIT 1";
         $executa_query_actualizado = mysqli_query($conn, $query_jogos_actualizados);
         $linha = mysqli_fetch_assoc($executa_query_actualizado);
         $nome = $linha['nome'];

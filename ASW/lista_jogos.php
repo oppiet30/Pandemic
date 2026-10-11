@@ -5,7 +5,7 @@
     include('headers.php');
     include('functions.php');
     include("db_config.php");
-    $query = "SELECT id, nome, descricao, jogadores_actuais, n_jogadores, data_comeco, criador FROM jogo";
+    $query = "SELECT id, nome, descricao, jogadores_actuais, n_jogadores, data_comeco, criador FROM games";
     $dados = mysqli_query($conn, $query) or die();
     $linha = mysqli_fetch_assoc($dados); // transforma numa lista
     $total = mysqli_num_rows($dados);   //total de dados

@@ -4,7 +4,7 @@ function pandemic_credentials_valid($conn, $nickname, $password) {
     if (!is_string($nickname) || !is_string($password) || $nickname === '' || $password === '') {
         return false;
     }
-    $stmt = mysqli_prepare($conn, 'SELECT password FROM user WHERE nickname = ? LIMIT 1');
+    $stmt = mysqli_prepare($conn, 'SELECT password FROM users WHERE nickname = ? LIMIT 1');
     mysqli_stmt_bind_param($stmt, 's', $nickname);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_bind_result($stmt, $stored_hash);

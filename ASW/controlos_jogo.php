@@ -57,7 +57,7 @@ if (isset($_POST['funcao']) && $_POST['funcao'] == 'verifica_estado_jogo') {
 // Adiciona um jogador novo ao jogo actual
 function addJogador($id_jogo, $nome_jogador, $conexao) {
     $conn = $conexao;
-    $query_pesquisa_jogador = "SELECT jogadores_actuais, n_jogadores, jogador2, jogador3, jogador4 FROM jogo WHERE id='$id_jogo'";
+    $query_pesquisa_jogador = "SELECT jogadores_actuais, n_jogadores, jogador2, jogador3, jogador4 FROM games WHERE id='$id_jogo'";
     $result = mysqli_query($conn, $query_pesquisa_jogador);
     while ($row = mysqli_fetch_assoc($result)) {
         if (!$row['jogador2']) {
@@ -68,7 +68,7 @@ function addJogador($id_jogo, $nome_jogador, $conexao) {
             $jogador_a_acrescentar = "jogador4='" . $_COOKIE['user'] . "'";
         }
         if ($row['jogadores_actuais'] < $row['n_jogadores']) {
-            $query_update = "UPDATE jogo SET jogadores_actuais='" . intval($row['jogadores_actuais'] + 1) . "', $jogador_a_acrescentar WHERE id='$id_jogo'";
+            $query_update = "UPDATE games SET jogadores_actuais='" . intval($row['jogadores_actuais'] + 1) . "', $jogador_a_acrescentar WHERE id='$id_jogo'";
             mysqli_query($conn, $query_update) or die();
             return "success";
         }
@@ -87,7 +87,7 @@ function addJogador($id_jogo, $nome_jogador, $conexao) {
  * @return boolean
  */
 function checkPlayer($id_jogo, $nick_jogador, $conn) {
-    $query_pesquisa_jogador = "SELECT criador, jogador2, jogador3, jogador4 FROM jogo WHERE id='$id_jogo'";
+    $query_pesquisa_jogador = "SELECT criador, jogador2, jogador3, jogador4 FROM games WHERE id='$id_jogo'";
     $result = mysqli_query($conn, $query_pesquisa_jogador);
     while ($row = mysqli_fetch_assoc($result)) {
         foreach ($row as $campo => $valor) {
@@ -134,7 +134,7 @@ function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3, $jogador4, $conn
 
 
 
-    $query_insercao = "INSERT INTO estado_jogo "
+    $query_insercao = "INSERT INTO game_states "
             . "(id_jogo, "
             . "estado, "
             . "n_jogadores, "
@@ -178,7 +178,7 @@ function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3, $jogador4, $conn
 
     mysqli_query($conn, $query_insercao);
 
-    $query_inicia_tabela_doencas_erradicas = "INSERT INTO doencas_erradicadas (id_jogo, `Amarelo`, `Azul`, `Preto`, `Vermelho`) VALUES($id_jogo, '0', '0', '0', '0')";
+    $query_inicia_tabela_doencas_erradicas = "INSERT INTO disease_cures (id_jogo, `Amarelo`, `Azul`, `Preto`, `Vermelho`) VALUES($id_jogo, '0', '0', '0', '0')";
     mysqli_query($conn, $query_inicia_tabela_doencas_erradicas);
 
     // Card drawing reads the game discard pile, so initialize state first.
@@ -207,7 +207,7 @@ function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3, $jogador4, $conn
  */
 
 function insereCarta($carta, $id_carta, $cor, $id_jogo, $jogador, $conn) {
-    $query_insert_cartas = "INSERT INTO cartas_jogador (id_jogo, id_carta, id_jogador, carta, cor, ja_jogada) VALUES('$id_jogo','$id_carta','$jogador', '$carta', '$cor', 0) ";
+    $query_insert_cartas = "INSERT INTO player_cards (id_jogo, id_carta, id_jogador, carta, cor, ja_jogada) VALUES('$id_jogo','$id_carta','$jogador', '$carta', '$cor', 0) ";
     mysqli_query($conn, $query_insert_cartas) or die(mysqli_error($conn));
 }
 
@@ -219,7 +219,7 @@ function insereCarta($carta, $id_carta, $cor, $id_jogo, $jogador, $conn) {
  */
 
 function rand_carta($jogador, $id_jogo, $conn) {
-    $sql_cartas = "SELECT * FROM cartas ORDER BY RAND() LIMIT 1";
+    $sql_cartas = "SELECT * FROM cards ORDER BY RAND() LIMIT 1";
 
     $dados_cartas = mysqli_query($conn, $sql_cartas) or die();
 
@@ -260,13 +260,13 @@ function infectaCidadesIniciais($id_jogo, $conn) {
  */
 
 function insereDoencasEmNovasCidades($id_cidade, $id_jogo, $conn, $numero_doencas = 1) {
-    $query_informacao_cidade = "SELECT * FROM cidades WHERE id=$id_cidade";
+    $query_informacao_cidade = "SELECT * FROM cities WHERE id=$id_cidade";
     $executa_query = mysqli_query($conn, $query_informacao_cidade);
     while ($row = mysqli_fetch_assoc($executa_query)) {
         $id_cidade_inserir = $row['id'];
         $nome_cidade_inserir = $row['nome'];
         $cor_da_cidade = $row['cor'];
-        mysqli_query($conn, "INSERT INTO cidades_infectadas (id_jogo, id_cidade, nome_cidade, n_doencas, cor) VALUES($id_jogo, $id_cidade_inserir,'$nome_cidade_inserir', $numero_doencas, '$cor_da_cidade' )");
+        mysqli_query($conn, "INSERT INTO city_infections (id_jogo, id_cidade, nome_cidade, n_doencas, cor) VALUES($id_jogo, $id_cidade_inserir,'$nome_cidade_inserir', $numero_doencas, '$cor_da_cidade' )");
     }
 }
 
@@ -280,7 +280,7 @@ function insereDoencasEmNovasCidades($id_cidade, $id_jogo, $conn, $numero_doenca
  */
 
 function verificaSeDoencaEstaErradicada($id_jogo, $cor, $conn) {
-    $query_doencas_ja_erradicadas = "SELECT `$cor` FROM doencas_erradicadas WHERE id_jogo='$id_jogo'";
+    $query_doencas_ja_erradicadas = "SELECT `$cor` FROM disease_cures WHERE id_jogo='$id_jogo'";
     $executa_query = mysqli_query($conn, $query_doencas_ja_erradicadas);
     if (!$executa_query) {
         return false;
@@ -304,7 +304,7 @@ function verificaSeDoencaEstaErradicada($id_jogo, $cor, $conn) {
  */
 
 function verificaCidadeInfectada($id_cidade, $id_jogo, $conn) {
-    $query_verifica_cidadade_infectada = "SELECT * FROM cidades_infectadas WHERE id_cidade=$id_cidade AND id_jogo=$id_jogo";
+    $query_verifica_cidadade_infectada = "SELECT * FROM city_infections WHERE id_cidade=$id_cidade AND id_jogo=$id_jogo";
     $executa_verificao = mysqli_query($conn, $query_verifica_cidadade_infectada);
     $row = mysqli_fetch_assoc($executa_verificao);
     return $row !== null && intval($row['n_doencas']) > 0;
@@ -321,7 +321,7 @@ function verificaCidadeInfectada($id_cidade, $id_jogo, $conn) {
  */
 
 function contaInfecoes($id_cidade, $id_jogo, $conn) {
-    $query_por_cidade = "SELECT n_doencas FROM cidades_infectadas WHERE id_jogo='$id_jogo' AND id_cidade='$id_cidade'";
+    $query_por_cidade = "SELECT n_doencas FROM city_infections WHERE id_jogo='$id_jogo' AND id_cidade='$id_cidade'";
     $executa_query = mysqli_query($conn, $query_por_cidade);
     $row = mysqli_fetch_assoc($executa_query);
     $n_doencas = $row['n_doencas'];
@@ -339,9 +339,9 @@ function contaInfecoes($id_cidade, $id_jogo, $conn) {
 
 function actualizaNumeroDoencas($id_cidade, $id_jogo, $n_doencas, $conn) {
     if ($n_doencas == 0) {
-        $query_actualizacao_doencas = "DELETE FROM cidades_infectadas WHERE id_cidade=$id_cidade AND id_jogo=$id_jogo";
+        $query_actualizacao_doencas = "DELETE FROM city_infections WHERE id_cidade=$id_cidade AND id_jogo=$id_jogo";
     } else {
-        $query_actualizacao_doencas = "UPDATE cidades_infectadas SET n_doencas='$n_doencas' WHERE id_cidade=$id_cidade AND id_jogo=$id_jogo";
+        $query_actualizacao_doencas = "UPDATE city_infections SET n_doencas='$n_doencas' WHERE id_cidade=$id_cidade AND id_jogo=$id_jogo";
     }
     mysqli_query($conn, $query_actualizacao_doencas);
 }
@@ -358,11 +358,11 @@ function actualizaNumeroDoencas($id_cidade, $id_jogo, $n_doencas, $conn) {
  */
 
 function verificaCartasRepetidas($jogo, $carta, $id_carta, $conn) {
-    $query_selecionar_cartas = "SELECT * FROM cartas_jogador WHERE id_jogo='$jogo' AND carta='$carta'";
+    $query_selecionar_cartas = "SELECT * FROM player_cards WHERE id_jogo='$jogo' AND carta='$carta'";
     $dados_cartas = mysqli_query($conn, $query_selecionar_cartas) or die();
     $cartas_descartadas = array();
 
-    $query_cartas_descartadas = "SELECT pilha_descarte FROM estado_jogo WHERE id_jogo='$jogo'";
+    $query_cartas_descartadas = "SELECT pilha_descarte FROM game_states WHERE id_jogo='$jogo'";
     $pilha_descarte = mysqli_query($conn, $query_cartas_descartadas) or die();
     $row = mysqli_fetch_assoc($pilha_descarte);
     $cartas_descartadas = explode(', ', $row['pilha_descarte']);
@@ -389,7 +389,7 @@ function verificaCartasRepetidas($jogo, $carta, $id_carta, $conn) {
  */
 
 function verificaEstadoJogo($id_jogo, $conn) {
-    $query_verificacao = "SELECT * FROM estado_jogo WHERE id_jogo='$id_jogo'";
+    $query_verificacao = "SELECT * FROM game_states WHERE id_jogo='$id_jogo'";
     $linha_jogo = mysqli_query($conn, $query_verificacao) or die();
     if ($linha_jogo === FALSE || mysqli_num_rows($linha_jogo) == 0) {
         return false;
@@ -438,7 +438,7 @@ function processaCartasJogador($id_jogo, $nickname, $conn) {
 function obtemCartasJogador($id_jogo, $nickname, $conn) {
     $cartas = array();
     $contador = 0;
-    $query_obter_cartas = "SELECT id_carta, carta, cor FROM cartas_jogador WHERE id_jogo='$id_jogo' AND id_jogador='$nickname' AND ja_jogada=0";
+    $query_obter_cartas = "SELECT id_carta, carta, cor FROM player_cards WHERE id_jogo='$id_jogo' AND id_jogador='$nickname' AND ja_jogada=0";
     $resultado_query = mysqli_query($conn, $query_obter_cartas);
     while ($row = mysqli_fetch_assoc($resultado_query)) {
         $cartas[$contador]['id_carta'] = $row['id_carta'];
@@ -533,11 +533,11 @@ function curaDoenca($id_jogo, $cor, $jogador, $cartas, $conn) {
     $jogador = mysqli_real_escape_string($conn, $jogador);
     mysqli_begin_transaction($conn);
     try {
-        mysqli_query($conn, "UPDATE doencas_erradicadas SET `$cor`=1 WHERE id_jogo=$id_jogo");
-        mysqli_query($conn, "DELETE FROM cidades_infectadas WHERE id_jogo=$id_jogo AND cor='$cor'");
+        mysqli_query($conn, "UPDATE disease_cures SET `$cor`=1 WHERE id_jogo=$id_jogo");
+        mysqli_query($conn, "DELETE FROM city_infections WHERE id_jogo=$id_jogo AND cor='$cor'");
         foreach ($cartas as $carta) {
             $carta = intval($carta);
-            mysqli_query($conn, "UPDATE cartas_jogador SET ja_jogada=1 WHERE id_jogo=$id_jogo AND id_carta=$carta AND id_jogador='$jogador'");
+            mysqli_query($conn, "UPDATE player_cards SET ja_jogada=1 WHERE id_jogo=$id_jogo AND id_carta=$carta AND id_jogador='$jogador'");
         }
         incrementaNumeroJogadas($id_jogo, $conn);
         mysqli_commit($conn);
@@ -559,7 +559,7 @@ function curaDoenca($id_jogo, $cor, $jogador, $cartas, $conn) {
 
 function obtemCidadeActual($id_jogo, $nickname, $conn) {
     $numero_jogador_procurar = "";
-    $query_jogador = "SELECT jogador1, jogador2, jogador3, jogador4 FROM estado_jogo WHERE id_jogo='$id_jogo'";
+    $query_jogador = "SELECT jogador1, jogador2, jogador3, jogador4 FROM game_states WHERE id_jogo='$id_jogo'";
     $resultado = mysqli_query($conn, $query_jogador);
     foreach ($resultado as $jogadores => $valor) {
         foreach ($valor as $jogador) {
@@ -574,7 +574,7 @@ function obtemCidadeActual($id_jogo, $nickname, $conn) {
             }
         }
     }
-    $query_cidade_actual = "Select cidade_jogador$numero_jogador_procurar FROM estado_jogo WHERE id_jogo='$id_jogo'";
+    $query_cidade_actual = "Select cidade_jogador$numero_jogador_procurar FROM game_states WHERE id_jogo='$id_jogo'";
     $resultado = mysqli_query($conn, $query_cidade_actual);
     $cidade_actual_id = mysqli_fetch_assoc($resultado);
     $cidade_actual = obterUmaCidade($cidade_actual_id['cidade_jogador' . $numero_jogador_procurar], $conn);
@@ -595,16 +595,16 @@ function obtemCidadeActual($id_jogo, $nickname, $conn) {
 function obtemTurnoDoJogador($id_jogo, $numero_turno, $conn) {
     switch ($numero_turno) {
         case(1):
-            $query_obter_jogadores = "SELECT jogador1 FROM estado_jogo WHERE id_jogo='$id_jogo' ";
+            $query_obter_jogadores = "SELECT jogador1 FROM game_states WHERE id_jogo='$id_jogo' ";
             break;
         case(2):
-            $query_obter_jogadores = "SELECT jogador2 FROM estado_jogo WHERE id_jogo='$id_jogo' ";
+            $query_obter_jogadores = "SELECT jogador2 FROM game_states WHERE id_jogo='$id_jogo' ";
             break;
         case(3):
-            $query_obter_jogadores = "SELECT jogador3 FROM estado_jogo WHERE id_jogo='$id_jogo' ";
+            $query_obter_jogadores = "SELECT jogador3 FROM game_states WHERE id_jogo='$id_jogo' ";
             break;
         case(4):
-            $query_obter_jogadores = "SELECT jogador4 FROM estado_jogo WHERE id_jogo='$id_jogo' ";
+            $query_obter_jogadores = "SELECT jogador4 FROM game_states WHERE id_jogo='$id_jogo' ";
             break;
     }
 
@@ -621,7 +621,7 @@ function obtemTurnoDoJogador($id_jogo, $numero_turno, $conn) {
  */
 
 function desistirJogo($id_jogo, $conn) {
-    $query_desistir = "UPDATE estado_jogo SET estado='Desistiram' WHERE id_jogo='$id_jogo'";
+    $query_desistir = "UPDATE game_states SET estado='Desistiram' WHERE id_jogo='$id_jogo'";
     mysqli_query($conn, $query_desistir);
 }
 
@@ -635,9 +635,9 @@ function desistirJogo($id_jogo, $conn) {
 
 function obterCidades($conn, $cor = '') {
     if ($cor != '') {
-        $query_cidades = "SELECT * FROM cidades WHERE cor='$cor'";
+        $query_cidades = "SELECT * FROM cities WHERE cor='$cor'";
     } else {
-        $query_cidades = "SELECT * FROM cidades";
+        $query_cidades = "SELECT * FROM cities";
     }
     $resultado_cidades = mysqli_query($conn, $query_cidades);
     $cidades = array();
@@ -656,7 +656,7 @@ function obterCidades($conn, $cor = '') {
  */
 
 function obterUmaCidade($id, $conn) {
-    $query_cidade = "SELECT * FROM cidades WHERE id='$id'";
+    $query_cidade = "SELECT * FROM cities WHERE id='$id'";
     $resultado_cidade = mysqli_query($conn, $query_cidade);
     $cidade = array();
     foreach ($resultado_cidade as $cidade_escolhida) {
@@ -674,7 +674,7 @@ function obterUmaCidade($id, $conn) {
  */
 
 function verificaConexoes($posicao_actual, $conn) {
-    $query_conexoes = "SELECT conexoes FROM cidades where nome='$posicao_actual'";
+    $query_conexoes = "SELECT conexoes FROM cities where nome='$posicao_actual'";
     $resultado_conexoes = mysqli_query($conn, $query_conexoes);
     while ($row = mysqli_fetch_assoc($resultado_conexoes)) {
         $conexoes = explode(', ', $row['conexoes']);
@@ -701,13 +701,13 @@ function verificaConexoes($posicao_actual, $conn) {
  */
 
 function moverParaCidade($id_jogo, $nickname, $destino, $conn) {
-    $query_destino = "SELECT * FROM cidades WHERE nome ='$destino'";
+    $query_destino = "SELECT * FROM cities WHERE nome ='$destino'";
     $resultado_destino = mysqli_query($conn, $query_destino);
     foreach ($resultado_destino as $cidade) {
         $id_cidade_actualizada = $cidade['id'];
     }
 
-    $query_pesquisa_jogador = "SELECT criador, jogador2, jogador3, jogador4 FROM jogo WHERE id='$id_jogo'";
+    $query_pesquisa_jogador = "SELECT criador, jogador2, jogador3, jogador4 FROM games WHERE id='$id_jogo'";
     $result = mysqli_query($conn, $query_pesquisa_jogador);
     while ($row = mysqli_fetch_assoc($result)) {
         foreach ($row as $campo => $valor) {
@@ -720,7 +720,7 @@ function moverParaCidade($id_jogo, $nickname, $destino, $conn) {
             }
         }
     }
-    $query_update_jogador = "UPDATE estado_jogo SET cidade_jogador$numero_jogador = '$id_cidade_actualizada' WHERE $campo_jogador='$nickname' AND id_jogo='$id_jogo' ";
+    $query_update_jogador = "UPDATE game_states SET cidade_jogador$numero_jogador = '$id_cidade_actualizada' WHERE $campo_jogador='$nickname' AND id_jogo='$id_jogo' ";
     mysqli_query($conn, $query_update_jogador);
     incrementaNumeroJogadas($id_jogo, $conn);
 }
@@ -737,14 +737,14 @@ function incrementaNumeroJogadas($id_jogo, $conn) {
     $proximo_turno = obtemNumeroTurnoActual($id_jogo, $conn) + 1;
     if ($jogadas < 2) {
         $jogadas++;
-        mysqli_query($conn, "UPDATE estado_jogo SET jogadas='$jogadas' WHERE id_jogo='$id_jogo'");
+        mysqli_query($conn, "UPDATE game_states SET jogadas='$jogadas' WHERE id_jogo='$id_jogo'");
     } else {
-        $query_jogador_actualmente_com_turno = "SELECT turno_jogador FROM estado_jogo WHERE id_jogo=$id_jogo";
+        $query_jogador_actualmente_com_turno = "SELECT turno_jogador FROM game_states WHERE id_jogo=$id_jogo";
         $executa_jogador_actualmente_com_turno = mysqli_query($conn, $query_jogador_actualmente_com_turno);
         $turno_jogador_actual = mysqli_fetch_assoc($executa_jogador_actualmente_com_turno);
         $turno_jogador = $turno_jogador_actual['turno_jogador'];
         mudaTurno($id_jogo, obtemNumeroTurnoActual($id_jogo, $conn), $turno_jogador, $conn, obtemTurnoDoJogador($id_jogo, obtemNumeroTurnoActual($id_jogo, $conn), $conn));
-//        mysqli_query($conn, "UPDATE estado_jogo SET jogadas='0', n_turnos=$proximo_turno WHERE id_jogo='$id_jogo'");
+//        mysqli_query($conn, "UPDATE game_states SET jogadas='0', n_turnos=$proximo_turno WHERE id_jogo='$id_jogo'");
     }
 }
 
@@ -757,7 +757,7 @@ function incrementaNumeroJogadas($id_jogo, $conn) {
  */
 
 function verificaNumeroJogadasFeitas($id_jogo, $conn) {
-    $query_jogadas = "SELECT jogadas FROM estado_jogo WHERE id_jogo='$id_jogo'";
+    $query_jogadas = "SELECT jogadas FROM game_states WHERE id_jogo='$id_jogo'";
     $resultado = mysqli_query($conn, $query_jogadas);
     while ($row = mysqli_fetch_assoc($resultado)) {
         return intval($row['jogadas']);
@@ -805,13 +805,13 @@ function biscar($id_jogo, $nickname, $conn) {
  */
 
 function aumentaCartasBiscadas($id_jogo, $contador, $conn) {
-    $numero_cartas_biscadas_actualmente = mysqli_query($conn, "SELECT cartas_biscadas FROM estado_jogo WHERE id_jogo=$id_jogo");
+    $numero_cartas_biscadas_actualmente = mysqli_query($conn, "SELECT cartas_biscadas FROM game_states WHERE id_jogo=$id_jogo");
     $incrementador = 0;
     while ($row = mysqli_fetch_row($numero_cartas_biscadas_actualmente)) {
         $incrementador = $incrementador + $row[0];
     }
     $incrementador = $incrementador + $contador;
-    mysqli_query($conn, "UPDATE estado_jogo SET cartas_biscadas=$incrementador WHERE id_jogo=$id_jogo");
+    mysqli_query($conn, "UPDATE game_states SET cartas_biscadas=$incrementador WHERE id_jogo=$id_jogo");
 }
 
 /*
@@ -831,7 +831,7 @@ function mudaTurno($id_jogo, $n_turnos, $turno_jogador, $conn, $nickname) {
 
     $novo_turno = obtemNumeroTurnoActual($id_jogo, $conn) + 1;
 
-    $query_numero_jogadores = "SELECT n_jogadores FROM estado_jogo WHERE id_jogo='$id_jogo'";
+    $query_numero_jogadores = "SELECT n_jogadores FROM game_states WHERE id_jogo='$id_jogo'";
     $resultado_numero_jogadores = mysqli_query($conn, $query_numero_jogadores);
 
     $row = mysqli_fetch_assoc($resultado_numero_jogadores);
@@ -844,7 +844,7 @@ function mudaTurno($id_jogo, $n_turnos, $turno_jogador, $conn, $nickname) {
     $contador = 0;
     infectaCidades($id_jogo, $conn);
 
-    mysqli_query($conn, "UPDATE estado_jogo SET n_turnos=$novo_turno, turno_jogador=$proximo_jogador, jogadas=0 WHERE id_jogo='$id_jogo'");
+    mysqli_query($conn, "UPDATE game_states SET n_turnos=$novo_turno, turno_jogador=$proximo_jogador, jogadas=0 WHERE id_jogo='$id_jogo'");
 }
 
 /*
@@ -856,7 +856,7 @@ function mudaTurno($id_jogo, $n_turnos, $turno_jogador, $conn, $nickname) {
  */
 
 function obtemNumeroTurnoActual($id_jogo, $conn) {
-    $query_numero_jogadores = "SELECT n_turnos FROM estado_jogo WHERE id_jogo='$id_jogo'";
+    $query_numero_jogadores = "SELECT n_turnos FROM game_states WHERE id_jogo='$id_jogo'";
     $executa_query = mysqli_query($conn, $query_numero_jogadores);
     $get_n_turnos = mysqli_fetch_assoc($executa_query);
     $n_turnos = $get_n_turnos['n_turnos'];
@@ -872,7 +872,7 @@ function obtemNumeroTurnoActual($id_jogo, $conn) {
  */
 
 function obtemCentrosPesquisa($id_jogo, $conn) {
-    $query_select_cps = "SELECT centros_pesquisa FROM estado_jogo WHERE id_jogo='$id_jogo'";
+    $query_select_cps = "SELECT centros_pesquisa FROM game_states WHERE id_jogo='$id_jogo'";
     $resultado_cps = mysqli_query($conn, $query_select_cps);
     $ids_cidades = array();
     while ($cidades = mysqli_fetch_assoc($resultado_cps)) {
@@ -897,7 +897,7 @@ function obtemCentrosPesquisa($id_jogo, $conn) {
  */
 
 function criarCentroPesquisa($id_jogo, $id_cidade, $carta, $jogador, $conn) {
-    $query_select_cps = "SELECT centros_pesquisa FROM estado_jogo WHERE id_jogo='$id_jogo'";
+    $query_select_cps = "SELECT centros_pesquisa FROM game_states WHERE id_jogo='$id_jogo'";
     $resultado_cps = mysqli_query($conn, $query_select_cps);
     $string_update_cps = '';
     while ($cidades = mysqli_fetch_assoc($resultado_cps)) {
@@ -911,7 +911,7 @@ function criarCentroPesquisa($id_jogo, $id_cidade, $carta, $jogador, $conn) {
     $string_update_cps .= $id_cidade . ',';
     removeCarta($id_jogo, $carta, $jogador, $conn);
 
-    mysqli_query($conn, "UPDATE estado_jogo SET centros_pesquisa='$string_update_cps' WHERE id_jogo='$id_jogo'");
+    mysqli_query($conn, "UPDATE game_states SET centros_pesquisa='$string_update_cps' WHERE id_jogo='$id_jogo'");
     incrementaNumeroJogadas($id_jogo, $conn);
 }
 
@@ -925,7 +925,7 @@ function criarCentroPesquisa($id_jogo, $id_cidade, $carta, $jogador, $conn) {
  */
 
 function removeCarta($id_jogo, $carta, $jogador, $conn) {
-    $query_actualiza_carta_jogada = "UPDATE cartas_jogador SET ja_jogada=1 WHERE id_jogo=$id_jogo AND id_jogador='$jogador' AND carta='$carta'";
+    $query_actualiza_carta_jogada = "UPDATE player_cards SET ja_jogada=1 WHERE id_jogo=$id_jogo AND id_jogador='$jogador' AND carta='$carta'";
     mysqli_query($conn, $query_actualiza_carta_jogada);
 }
 
@@ -939,7 +939,7 @@ function removeCarta($id_jogo, $carta, $jogador, $conn) {
 
 function obtemVelocidadeInfecao($id_jogo, $conn) {
     $infecao = array();
-    $query_velocidade_infecao = "SELECT velocidade_infecao, mudar_velocidade, surtos FROM estado_jogo WHERE id_jogo=$id_jogo";
+    $query_velocidade_infecao = "SELECT velocidade_infecao, mudar_velocidade, surtos FROM game_states WHERE id_jogo=$id_jogo";
     $executa_query = mysqli_query($conn, $query_velocidade_infecao);
     $row = mysqli_fetch_assoc($executa_query);
     $infecao['velocidade'] = $row['velocidade_infecao'];
@@ -1018,7 +1018,7 @@ function insereNovaDoencaEmCidade($id_jogo, $id_cidade, $conn) {
     $cidade_especificada = obterUmaCidade($id_cidade, $conn)[0];
     $nome_cidade = $cidade_especificada['nome'];
     $cor = $cidade_especificada['cor'];
-    $insere_cidade_com_doenca = "INSERT INTO cidades_infectadas (id_jogo, id_cidade, nome_cidade,n_doencas, cor) VALUES ($id_jogo, $id_cidade, '$nome_cidade', 1, '$cor') ";
+    $insere_cidade_com_doenca = "INSERT INTO city_infections (id_jogo, id_cidade, nome_cidade,n_doencas, cor) VALUES ($id_jogo, $id_cidade, '$nome_cidade', 1, '$cor') ";
     mysqli_query($conn, $insere_cidade_com_doenca);
 }
 
@@ -1053,7 +1053,7 @@ function incrementaVelocidadeInfeccao($id_jogo, $conn) {
             break;
     }
     $incremento_numero_de_surto = $estado_infecao['surtos'] + 1;
-    mysqli_query($conn, "UPDATE estado_jogo SET surtos='$incremento_numero_de_surto', velocidade_infecao='$velocidade_infecao' WHERE id_jogo='$id_jogo'");
+    mysqli_query($conn, "UPDATE game_states SET surtos='$incremento_numero_de_surto', velocidade_infecao='$velocidade_infecao' WHERE id_jogo='$id_jogo'");
 }
 
 /*
@@ -1088,7 +1088,7 @@ function originaOutbreak($id_jogo, $id_cidade, $conn) {
     $array_nome_de_cidades = explode(', ', $cidade_especificada['conexoes']);
 
     foreach ($array_nome_de_cidades as $cidade) {
-        $query_ids_cidades = "SELECT * FROM cidades WHERE nome='$cidade'";
+        $query_ids_cidades = "SELECT * FROM cities WHERE nome='$cidade'";
 
         $executa_query = mysqli_query($conn, $query_ids_cidades);
         $row = mysqli_fetch_assoc($executa_query);
@@ -1115,7 +1115,7 @@ function originaOutbreak($id_jogo, $id_cidade, $conn) {
 
 function confirmaJogoADecorrer($id_jogo, $conn) {
     $id_jogo = intval($id_jogo);
-    $row = mysqli_fetch_assoc(mysqli_query($conn, "SELECT estado, cartas_biscadas FROM estado_jogo WHERE id_jogo=$id_jogo"));
+    $row = mysqli_fetch_assoc(mysqli_query($conn, "SELECT estado, cartas_biscadas FROM game_states WHERE id_jogo=$id_jogo"));
     if (!$row) {
         echo json_encode(array('estado' => ''));
         return;
@@ -1128,13 +1128,13 @@ function confirmaJogoADecorrer($id_jogo, $conn) {
             && verificaSeDoencaEstaErradicada($id_jogo, 'Preto', $conn)) {
             $estado = 'Vitoria';
         } else {
-            $infectadas = mysqli_query($conn, "SELECT id FROM cidades_infectadas WHERE id_jogo=$id_jogo");
+            $infectadas = mysqli_query($conn, "SELECT id FROM city_infections WHERE id_jogo=$id_jogo");
             if ($row['cartas_biscadas'] >= 40 || mysqli_num_rows($infectadas) >= 40) {
                 $estado = 'Derrota';
             }
         }
         if ($estado != $row['estado']) {
-            mysqli_query($conn, "UPDATE estado_jogo SET estado='$estado' WHERE id_jogo=$id_jogo");
+            mysqli_query($conn, "UPDATE game_states SET estado='$estado' WHERE id_jogo=$id_jogo");
         }
     }
     // Polling expects exactly one JSON document, including at victory/defeat.

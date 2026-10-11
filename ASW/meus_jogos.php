@@ -6,7 +6,7 @@
     include('functions.php');
     include("db_config.php");
     $meu_login = $_COOKIE['user'];
-    $query = "SELECT id, nome, descricao, jogadores_actuais, n_jogadores, data_comeco, criador FROM jogo WHERE criador='$meu_login' OR jogador2='$meu_login' OR jogador3='$meu_login' OR jogador4='$meu_login'";
+    $query = "SELECT id, nome, descricao, jogadores_actuais, n_jogadores, data_comeco, criador FROM games WHERE criador='$meu_login' OR jogador2='$meu_login' OR jogador3='$meu_login' OR jogador4='$meu_login'";
     $dados = mysqli_query($conn, $query) or die();
     $linha = mysqli_fetch_assoc($dados); // transforma numa lista
     $total = mysqli_num_rows($dados);   //total de dados

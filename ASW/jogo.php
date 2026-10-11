@@ -9,7 +9,7 @@ if (!$_COOKIE["user"]) {
 
 include 'controlos_jogo.php';
 
-$query = "SELECT * FROM jogo WHERE id ='" . $_GET['jogo'] . "' ";
+$query = "SELECT * FROM games WHERE id ='" . $_GET['jogo'] . "' ";
 
 $dados = mysqli_query($conn, $query) or die();
 $linha = mysqli_fetch_assoc($dados); // transforma numa lista
