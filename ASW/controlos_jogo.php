@@ -686,7 +686,7 @@ function verificaConexoes($posicao_actual, $conn) {
         $string_botoes .= '<button type="button" class="btn btn-info cidade_escolhida" value="' . $conexao . '" >' . pandemic_display($conexao) . '</button>';
     }
 
-    $string_botoes .= '<button type="button" class="btn btn-danger cidade_escolhida" id="cancel "value="cancelar" >Cancel</button>';
+    $string_botoes .= '<button type="button" class="btn btn-danger cidade_escolhida" id="cancel "value="cancelar" >' . pandemic_text('Cancel') . '</button>';
     echo($string_botoes);
 }
 

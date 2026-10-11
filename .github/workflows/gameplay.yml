@@ -30,8 +30,12 @@ jobs:
           sudo apt-get install -y php-cli php-mysql
       - name: Check application PHP syntax
         run: find ASW tests -name '*.php' -not -path 'ASW/PHPMailer/*' -print0 | xargs -0 -n1 php -l
+      - name: Check translations and rendered pages
+        run: node tests/check-inline-js.cjs
       - name: Run isolated database regressions
         env:
           MYSQL_TEST_HOST: 127.0.0.1
           MYSQL_TEST_USER: root
-        run: php tests/gameplay.php
+        run: |
+          PANDEMIC_TEST_LOCALE=en php tests/gameplay.php
+          PANDEMIC_TEST_LOCALE=pt php tests/gameplay.php

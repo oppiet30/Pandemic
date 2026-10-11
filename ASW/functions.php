@@ -29,7 +29,7 @@ function verificaUltimoJogo($total_actual, $conn) {
         $n_jogadores = $linha['n_jogadores'];
         $criador = $linha['criador'];
         $link = "'jogo.php?jogo=" . $linha['id'] . "'";
-        echo "<tr><td>" . $nome . "</td><td>" . $descricao . "</td><td>" . $n_jogadores . "</td><td>" . $criador . "</td> <td><a href=" . $link . "><button id='juntar_jogo' class='btn btn-success'> Join game</button></a></td>";
+        echo "<tr><td>" . $nome . "</td><td>" . $descricao . "</td><td>" . $n_jogadores . "</td><td>" . $criador . "</td> <td><a href=" . $link . "><button id='juntar_jogo' class='btn btn-success'> " . pandemic_text('Join game') . "</button></a></td>";
     } else{
         echo 'igual';
     }

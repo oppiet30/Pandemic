@@ -1,5 +1,6 @@
+<?php require_once __DIR__ . '/i18n.php'; ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo pandemic_locale(); ?>">
     <?php
     include('headers.php');
     include('functions.php');
@@ -11,23 +12,24 @@
     $total = mysqli_num_rows($dados);   //total de dados
     ?>
     <body>
+        <?php include __DIR__ . '/language_selector.php'; ?>
         <header>
             <a href="index.php"><img id="logo" src="fundo.jpg"/></a>
             <h1 id="title">PANDEMIC</h1>
         </header>
         <div id="logs">
-            <button id="botao_logout" href="homepage.php">Back</button>
+            <button id="botao_logout" href="homepage.php"><?php echo pandemic_text('Back'); ?></button>
         </div>
 
 
         <div class="registo">
-            <h2>Game list</h2>
+            <h2><?php echo pandemic_text('Game list'); ?></h2>
             <table border="1" id="lista_jogos">
-                <td class="cabecalho">Name</td>
-                <td class="cabecalho">Description</td>
-                <td class="cabecalho">Number of players</td>
-                <td colspan="1" class="cabecalho">Created by</td>
-                <td class="cabecalho">Options</td>
+                <td class="cabecalho"><?php echo pandemic_text('Name'); ?></td>
+                <td class="cabecalho"><?php echo pandemic_text('Description'); ?></td>
+                <td class="cabecalho"><?php echo pandemic_text('Number of players'); ?></td>
+                <td colspan="1" class="cabecalho"><?php echo pandemic_text('Created by'); ?></td>
+                <td class="cabecalho"><?php echo pandemic_text('Options'); ?></td>
                 <tbody>
                     <?php
                     // se o número de resultados for maior que zero, mostra os dados
@@ -42,7 +44,7 @@
                                 <td><?php echo $linha['n_jogadores'] ?></td>
                                 <td><?php echo $linha['criador'] ?></td>
 
-                                <td><a href="jogo.php?jogo=<?php echo $linha['id'] ?>"><button id="juntar_jogo" class="btn btn-success"> Join game</button></a></td>
+                                <td><a href="jogo.php?jogo=<?php echo $linha['id'] ?>"><button id="juntar_jogo" class="btn btn-success"> <?php echo pandemic_text('Join game'); ?></button></a></td>
 
                             </tr>
 

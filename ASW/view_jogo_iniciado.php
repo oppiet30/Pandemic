@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/i18n.php'; ?>
 
 <div class="col-lg-12">
     <div class="container-fluid">
@@ -7,10 +8,10 @@
 
                 <table id="tabela1">
                     <tr>
-                        <th>Game name</th>
-                        <th>Created by</th>
-                        <th>Description</th>
-                        <th>Game start</th>
+                        <th><?php echo pandemic_text('Game name'); ?></th>
+                        <th><?php echo pandemic_text('Created by'); ?></th>
+                        <th><?php echo pandemic_text('Description'); ?></th>
+                        <th><?php echo pandemic_text('Game start'); ?></th>
                     </tr>
                     <tr>
                         <td> <?php echo $linha['nome']; ?> </td>
@@ -24,10 +25,10 @@
 
                 <table id="tabela_cidades">
                     <tr>
-                        <th>City</th>
-                        <th>Connections</th>
-                        <th>Research station</th>
-                        <th>Disease cubes</th>
+                        <th><?php echo pandemic_text('City'); ?></th>
+                        <th><?php echo pandemic_text('Connections'); ?></th>
+                        <th><?php echo pandemic_text('Research station'); ?></th>
+                        <th><?php echo pandemic_text('Disease cubes'); ?></th>
                     </tr>
                     <?php foreach ($cidades as $cidade) { ?>
                         <tr>
@@ -35,9 +36,9 @@
                             <td><?php echo pandemic_display_list($cidade['conexoes']) ?></td>
                             <td data-id_cidade="<?php echo $cidade['id'] ?>"><?php
                                 if (in_array($cidade['id'], $centros_pesquisa)) {
-                                    echo "<span class='Verde'>Yes</span>";
+                                    echo pandemic_markup('<span class=\'Verde\'>Yes</span>');
                                 } else {
-                                    echo "<span class='Vermelho'>No</span>";
+                                    echo pandemic_markup('<span class=\'Vermelho\'>No</span>');
                                 }
                                 ?></td>
                             <?php
@@ -57,7 +58,7 @@
                                 <td><span class="<?php echo $classe ?>"><?php echo contaInfecoes($cidade['id'], $_GET['jogo'], $conn) ?></span></td>
                             <?php } else {
                                 ?>
-                                <td><span class="">No disease cubes</span></td>
+                                <td><span class=""><?php echo pandemic_text('No disease cubes'); ?></span></td>
 
                             <?php } ?>
                         </tr>
@@ -71,9 +72,9 @@
 
                 <table id="tabela_surtos">
                     <tr>
-                        <th>Infection rate</th>
-                        <th>Outbreaks</th>
-                        <th>Research stations</th>
+                        <th><?php echo pandemic_text('Infection rate'); ?></th>
+                        <th><?php echo pandemic_text('Outbreaks'); ?></th>
+                        <th><?php echo pandemic_text('Research stations'); ?></th>
                     </tr>
                     <tr>
                         <td><?php echo $estado_infecao['velocidade'] ?></td>
@@ -85,16 +86,16 @@
                 <br>
                 <table id="tabela_curas">
                     <tr>
-                        <th class="Azul">Blue cure</th>
-                        <th class="Vermelho">Red cure</th>
-                        <th class="Preto">Black cure</th>
-                        <th class="Amarelo">Yellow cure</th>
+                        <th class="Azul"><?php echo pandemic_text('Blue cure'); ?></th>
+                        <th class="Vermelho"><?php echo pandemic_text('Red cure'); ?></th>
+                        <th class="Preto"><?php echo pandemic_text('Black cure'); ?></th>
+                        <th class="Amarelo"><?php echo pandemic_text('Yellow cure'); ?></th>
                     </tr>
                     <tr>
-                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Azul', $conn) ? "<span>Discovered!</span>" : "<span>Not discovered</span>") ?></td>
-                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Vermelho', $conn) ? "<span>Discovered!</span>" : "<span>Not discovered</span>") ?></td>
-                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Preto', $conn) ? "<span>Discovered!</span>" : "<span>Not discovered</span>") ?></td>
-                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Amarelo', $conn) ? "<span>Discovered!</span>" : "<span>Not discovered</span>") ?></td>
+                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Azul', $conn) ? pandemic_markup('<span>Discovered!</span>') : pandemic_markup('<span>Not discovered</span>')) ?></td>
+                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Vermelho', $conn) ? pandemic_markup('<span>Discovered!</span>') : pandemic_markup('<span>Not discovered</span>')) ?></td>
+                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Preto', $conn) ? pandemic_markup('<span>Discovered!</span>') : pandemic_markup('<span>Not discovered</span>')) ?></td>
+                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Amarelo', $conn) ? pandemic_markup('<span>Discovered!</span>') : pandemic_markup('<span>Not discovered</span>')) ?></td>
                     </tr>
                 </table>
             </div>
@@ -102,9 +103,9 @@
         <div class="col-lg-4">
             <div class="row">
                 <table id="dados_jogadores">
-                    <th id="nomes">Players</th>
-                    <th id="cartas">Cards</th>
-                    <th id="posicao">Location</th>
+                    <th id="nomes"><?php echo pandemic_text('Players'); ?></th>
+                    <th id="cartas"><?php echo pandemic_text('Cards'); ?></th>
+                    <th id="posicao"><?php echo pandemic_text('Location'); ?></th>
                     </tr>
                     <tr>
                         <td><?php echo $verifica_jogo['jogador1']; ?></td>
@@ -136,17 +137,17 @@
 
                 </table>
                 <?php if (!checkPlayer($_GET['jogo'], $nickname_jogador, $conn)) { ?>
-                    <button class="join_game">Join this game</button>
+                    <button class="join_game"><?php echo pandemic_text('Join this game'); ?></button>
                     <?php
                 }
                 ?>
             </div>
             <div class="row">
-                <span class="turno">Current player:</span>
-                <p class="jogador_actual"><?php echo (obtemTurnoDoJogador($_GET['jogo'], $verifica_jogo['turno_jogador'], $conn) == $_COOKIE['user'] ? "Your turn" : obtemTurnoDoJogador($_GET['jogo'], $verifica_jogo['turno_jogador'], $conn)) ?></p>
-                <span class="turno">Turn number:</span>
+                <span class="turno"><?php echo pandemic_text('Current player:'); ?></span>
+                <p class="jogador_actual"><?php echo (obtemTurnoDoJogador($_GET['jogo'], $verifica_jogo['turno_jogador'], $conn) == $_COOKIE['user'] ? pandemic_text('Your turn') : obtemTurnoDoJogador($_GET['jogo'], $verifica_jogo['turno_jogador'], $conn)) ?></p>
+                <span class="turno"><?php echo pandemic_text('Turn number:'); ?></span>
                 <p class="numero_turnos"><?php echo $verifica_jogo['n_turnos'] ?></p>
-                <span class="turno">Action number:</span>
+                <span class="turno"><?php echo pandemic_text('Action number:'); ?></span>
                 <p class="numero_turnos"><?php echo verificaNumeroJogadasFeitas($_GET['jogo'], $conn) + 1 ?></p>
             </div>
         </div>
@@ -157,22 +158,22 @@
 
 
             <div class="controlos_jogo container">
-                <h3>Game controls</h3>
+                <h3><?php echo pandemic_text('Game controls'); ?></h3>
                 <?php if (verificaCidadeInfectada($cidade_jogador['id'], $_GET['jogo'], $conn)) { ?>
-                    <button type="button" id="tratar_uma_doenca">Treat disease</button>
+                    <button type="button" id="tratar_uma_doenca"><?php echo pandemic_text('Treat disease'); ?></button>
                 <?php } ?>
-                <button type="button" id="move">Move to another city</button>
+                <button type="button" id="move"><?php echo pandemic_text('Move to another city'); ?></button>
                 <?php if (!in_array($cidade_jogador['id'], $centros_pesquisa) && in_array($cidade_jogador['nome'], $cartas_disponiveis)) { ?>
-                    <button type="button" id="criar_cp" value="<?php echo $cidade_jogador['id'] ?>">Build a research station</button>
+                    <button type="button" id="criar_cp" value="<?php echo $cidade_jogador['id'] ?>"><?php echo pandemic_text('Build a research station'); ?></button>
                 <?php } if ($pode_criar_cura && verificaSePodeCurarDoenca($_GET['jogo'], $_COOKIE['user'], $conn)) { ?>
-                    <button type="button" id="abrir_cartas_de_cura" >Discover a cure</button>
+                    <button type="button" id="abrir_cartas_de_cura" ><?php echo pandemic_text('Discover a cure'); ?></button>
                 <?php } ?>
-                <button type="button" class="btn btn-info" id="fim_turno">End turn</button>
+                <button type="button" class="btn btn-info" id="fim_turno"><?php echo pandemic_text('End turn'); ?></button>
 
                 <div id="destinations"></div>
                 <?php if ($pode_criar_cura) { ?>
                     <div class="row" id="curar_doenca">
-                        <h5>Choose the cards to play.</h5>
+                        <h5><?php echo pandemic_text('Choose the cards to play.'); ?></h5>
                         <?php
                         $cartas_jogaveis = $cartas_na_mao_jogador[$cidade_jogador['cor']];
 
@@ -187,14 +188,14 @@
                             }
                         }
                         ?>
-                        <button id="jogar_cartas">Play cards</button>
-                        <button id="cancelar_jogada">Cancel</button>
+                        <button id="jogar_cartas"><?php echo pandemic_text('Play cards'); ?></button>
+                        <button id="cancelar_jogada"><?php echo pandemic_text('Cancel'); ?></button>
                     </div>
                 <?php } ?>
                 <?php if ($_COOKIE['user'] == $verifica_jogo['jogador1']) { ?>
                     <div class="row">
                         <div class="col-lg-12">
-                            <button class="btn btn-danger btn-lg" id="abrir_modal_desistir" data-toggle="modal" data-target="#modal_desistir">GIVE UP</button>
+                            <button class="btn btn-danger btn-lg" id="abrir_modal_desistir" data-toggle="modal" data-target="#modal_desistir"><?php echo pandemic_text('GIVE UP'); ?></button>
                         </div>
                     </div>
                 <?php } ?>
@@ -205,15 +206,15 @@
         if (checkPlayer($_GET['jogo'], $nickname_jogador, $conn)) {
             ?>
             <div class="controlos_jogo container">
-                <h3>You have used all your actions</h3>
-                <button type="button" class="btn btn-info" id="fim_turno">End turn</button>
+                <h3><?php echo pandemic_text('You have used all your actions'); ?></h3>
+                <button type="button" class="btn btn-info" id="fim_turno"><?php echo pandemic_text('End turn'); ?></button>
             </div>
             <?php
         }
     } else if ($_COOKIE['user'] != obtemTurnoDoJogador($_GET['jogo'], $verifica_jogo['turno_jogador'], $conn)) {
         ?>
         <div class = "controlos_jogo container">
-            <h3>Waiting for your turn...</h3>
+            <h3><?php echo pandemic_text('Waiting for your turn...'); ?></h3>
 
         </div>
     <?php }
@@ -227,14 +228,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Are you sure you want to give up?</h4>
+                <h4 class="modal-title"><?php echo pandemic_text('Are you sure you want to give up?'); ?></h4>
             </div>
             <div class="modal-body">
-                <p>Giving up is final and cannot be undone.</p>
+                <p><?php echo pandemic_text('Giving up is final and cannot be undone.'); ?></p>
             </div>
             <div>
-                <button type="button" class="btn btn-success botoes-modal" data-dismiss="modal">Keep playing</button>
-                <button type="button" class="btn btn-danger botoes-modal" id="desistir" value="<?php echo $_GET['jogo'] ?>">Give up. Humanity is doomed!</button>
+                <button type="button" class="btn btn-success botoes-modal" data-dismiss="modal"><?php echo pandemic_text('Keep playing'); ?></button>
+                <button type="button" class="btn btn-danger botoes-modal" id="desistir" value="<?php echo $_GET['jogo'] ?>"><?php echo pandemic_text('Give up. Humanity is doomed!'); ?></button>
             </div>
         </div>
     </div>

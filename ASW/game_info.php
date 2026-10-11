@@ -1,11 +1,13 @@
+<?php require_once __DIR__ . '/i18n.php'; ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo pandemic_locale(); ?>">
     <?php
     include('headers.php');
     include('functions.php');
 
     ?>
     <body>
+        <?php include __DIR__ . '/language_selector.php'; ?>
         <header>
             <a href="index.php"><img id="logo" src="fundo.jpg"/></a>
             <h1 id="title">PANDEMIC</h1>
@@ -36,17 +38,17 @@
         </style>
 
         <div class="controlos_jogo">
-          <h3>Game controls</h3>
-          <button type="button">Treat disease</button>
-          <button type="button">Move to another city</button>
-          <button type="button">Build a research station</button>
-          <button type="button">Discover a cure</button>
+          <h3><?php echo pandemic_text('Game controls'); ?></h3>
+          <button type="button"><?php echo pandemic_text('Treat disease'); ?></button>
+          <button type="button"><?php echo pandemic_text('Move to another city'); ?></button>
+          <button type="button"><?php echo pandemic_text('Build a research station'); ?></button>
+          <button type="button"><?php echo pandemic_text('Discover a cure'); ?></button>
         </div>
 
         <table id="tabela1">
           <tr>
-            <th>Game name</th>
-            <th>Game start time</th>
+            <th><?php echo pandemic_text('Game name'); ?></th>
+            <th><?php echo pandemic_text('Game start time'); ?></th>
           </tr>
           <tr>
             <td> <!--Nome do jogo a ir buscar à base de dados --> </td>
@@ -57,21 +59,21 @@
 
         <table id="tabela_jogadores">
           <tr>
-            <th>Players</th>
-            <th>Cards</th>
-            <th>Current player</th>
-            <th>Location</th>
+            <th><?php echo pandemic_text('Players'); ?></th>
+            <th><?php echo pandemic_text('Cards'); ?></th>
+            <th><?php echo pandemic_text('Current player'); ?></th>
+            <th><?php echo pandemic_text('Location'); ?></th>
           </tr>
           <tr>
-            <td>Player 1</td>
+            <td><?php echo pandemic_text('Player 1'); ?></td>
             <td>Paris, Beijing</td>
-            <td>Yes</td>
+            <td><?php echo pandemic_text('Yes'); ?></td>
             <td>Miami</td>
           </tr>
           <tr>
-            <td>Player 2</td>
-            <td>Rome</td>
-            <td>No</td>
+            <td><?php echo pandemic_text('Player 2'); ?></td>
+            <td><?php echo pandemic_text('Rome'); ?></td>
+            <td><?php echo pandemic_text('No'); ?></td>
             <td>Miami</td>
           </tr>
         </table>
@@ -80,64 +82,64 @@
 
         <table id="tabela_cidades">
           <tr>
-            <th>City</th>
-            <th>Card color</th>
-            <th>Connections</th>
-            <th>Research station</th>
-            <th>Disease cubes</th>
+            <th><?php echo pandemic_text('City'); ?></th>
+            <th><?php echo pandemic_text('Card color'); ?></th>
+            <th><?php echo pandemic_text('Connections'); ?></th>
+            <th><?php echo pandemic_text('Research station'); ?></th>
+            <th><?php echo pandemic_text('Disease cubes'); ?></th>
           </tr>
           <tr>
             <td>Madrid</td>
-            <td>Blue</td>
+            <td><?php echo pandemic_text('Blue'); ?></td>
             <td>London, Paris, New York </td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Atlanta</td>
-            <td>Blue</td>
+            <td><?php echo pandemic_text('Blue'); ?></td>
             <td>Chicago, Miami, Washington </td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Miami</td>
-            <td>Yellow</td>
+            <td><?php echo pandemic_text('Yellow'); ?></td>
             <td>Washington, Atlanta, Mexico City, Bogotá </td>
             <td>1</td>
             <td>2</td>
           </tr>
           <tr>
             <td>São Paulo</td>
-            <td>Yellow</td>
+            <td><?php echo pandemic_text('Yellow'); ?></td>
             <td>Buenos Aires, Bogotá, Lagos, Madrid </td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Moscow</td>
-            <td>Black</td>
+            <td><?php echo pandemic_text('Black'); ?></td>
             <td>St. Petersburg, Istanbul, Tehran</td>
             <td>0</td>
             <td>1</td>
           </tr>
           <tr>
-            <td>Baghdad</td>
-            <td>Black</td>
+            <td><?php echo pandemic_text('Baghdad'); ?></td>
+            <td><?php echo pandemic_text('Black'); ?></td>
             <td>Tehran, Istanbul, Cairo</td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Tokyo</td>
-            <td>Red</td>
+            <td><?php echo pandemic_text('Red'); ?></td>
             <td>Seoul,Osaka,Shanghai,San Francisco</td>
             <td>0</td>
             <td>0</td>
           </tr>
           <tr>
             <td>Shanghai</td>
-            <td>Red</td>
+            <td><?php echo pandemic_text('Red'); ?></td>
             <td>Hong Kong,Taipei,Tokyo,Seoul,Beijing</td>
             <td>1</td>
             <td>2</td>
@@ -148,9 +150,9 @@
 
         <table id="tabela_surtos">
           <tr>
-            <th>Infection rate</th>
-            <th>Outbreaks</th>
-            <th>Research stations</th>
+            <th><?php echo pandemic_text('Infection rate'); ?></th>
+            <th><?php echo pandemic_text('Outbreaks'); ?></th>
+            <th><?php echo pandemic_text('Research stations'); ?></th>
           </tr>
           <tr>
             <td>3</td>
@@ -162,10 +164,10 @@
         <br>
         <table id="tabela_curas">
           <tr>
-            <th>Blue cure</th>
-            <th>Red cure</th>
-            <th>Black cure</th>
-            <th>Yellow cure</th>
+            <th><?php echo pandemic_text('Blue cure'); ?></th>
+            <th><?php echo pandemic_text('Red cure'); ?></th>
+            <th><?php echo pandemic_text('Black cure'); ?></th>
+            <th><?php echo pandemic_text('Yellow cure'); ?></th>
           </tr>
           <tr>
             <td></td>

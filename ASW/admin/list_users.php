@@ -1,4 +1,4 @@
-<?php
+<?php require_once __DIR__ . '/../i18n.php';
 require_once __DIR__ . '/../display.php';
 include('../db_config.php');
 
@@ -19,13 +19,14 @@ foreach ($_POST as $pesquisar => $dados) {
 
 $result_lista = mysqli_query($conn, $query_lista) or die();
 ?>
-<html lang="en">
+<html lang="<?php echo pandemic_locale(); ?>">
     <?php include 'consts.php'; ?>
     <?php include './headers.php'; ?>
     <body>
+        <?php include __DIR__ . '/../language_selector.php'; ?>
         <table>
             <tr>
-                <th>User ID</th><th>Name</th><th>Last name</th><th>Username</th><th>Email</th><th>Sex</th><th>Date of birth</th><th>Country</th><th>District</th><th>Municipality<th>Password</th>
+                <th><?php echo pandemic_text('User ID'); ?></th><th><?php echo pandemic_text('Name'); ?></th><th><?php echo pandemic_text('Last name'); ?></th><th><?php echo pandemic_text('Username'); ?></th><th><?php echo pandemic_text('Email'); ?></th><th><?php echo pandemic_text('Sex'); ?></th><th><?php echo pandemic_text('Date of birth'); ?></th><th><?php echo pandemic_text('Country'); ?></th><th><?php echo pandemic_text('District'); ?></th><th><?php echo pandemic_text('Municipality'); ?><th><?php echo pandemic_text('Password'); ?></th>
             </tr>
 
             <?php while ($row = mysqli_fetch_assoc($result_lista)) { ?>
@@ -35,7 +36,7 @@ $result_lista = mysqli_query($conn, $query_lista) or die();
                         if ($campo == 'pais') {
                             $display = pandemic_display($dados);
                         } elseif ($campo == 'sexo') {
-                            $display = ($dados == 'm' ? 'Male' : ($dados == 'f' ? 'Female' : htmlspecialchars($dados, ENT_QUOTES, 'UTF-8')));
+                            $display = ($dados == 'm' ? pandemic_text('Male') : ($dados == 'f' ? pandemic_text('Female') : htmlspecialchars($dados, ENT_QUOTES, 'UTF-8')));
                         } else {
                             $display = htmlspecialchars($dados, ENT_QUOTES, 'UTF-8');
                         }
@@ -50,13 +51,13 @@ $result_lista = mysqli_query($conn, $query_lista) or die();
 
         </table>
         <form action="" method="POST">
-            <label for="procurar">Search by:</label>
+            <label for="procurar"><?php echo pandemic_text('Search by:'); ?></label>
             <select name="procurar">
-                <option value="nome">Name</option>
-                <option value="pais">Country</option>
+                <option value="nome"><?php echo pandemic_text('Name'); ?></option>
+                <option value="pais"><?php echo pandemic_text('Country'); ?></option>
             </select>
             <input type="text" name="a_procurar" />
-            <button type="submit">Search</button>
+            <button type="submit"><?php echo pandemic_text('Search'); ?></button>
         </form>
     </body>
 </html>

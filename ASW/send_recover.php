@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/i18n.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -19,12 +20,12 @@ $mail->isHTML();
 $mail->Username = getenv("PANDEMIC_SMTP_USERNAME") ?: "";
 $mail->Password = getenv("PANDEMIC_SMTP_PASSWORD") ?: "";
 $mail->SetFrom("no-reply@pandemic.com");
-$mail->Subject = "Password recovery";
-$mail->Body = "Follow this link to reset your password: <br>
-              <a href='http://localhost/Projeto/ASW/password_rec.php'>Reset password</a>";
+$mail->Subject = pandemic_t('Password recovery');
+$mail->Body = pandemic_text('Follow this link to reset your password:') . " <br>
+              <a href='http://localhost/Projeto/ASW/password_rec.php'>" . pandemic_text('Reset password') . '</a>';
 $mail->AddAddress($to);
 
 $mail->Send();
-echo 'Password recovery email sent successfully!';
+echo pandemic_text('Password recovery email sent successfully!');
 
 ?>

@@ -1,5 +1,6 @@
 <?php
 /** Uses a newly created random database; never imports sample accounts or touches an existing database. */
+$_COOKIE['pandemic_lang'] = getenv('PANDEMIC_TEST_LOCALE') ?: 'en';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 set_error_handler(function ($severity, $message, $file, $line) {
     if (error_reporting() & $severity) throw new ErrorException($message, 0, $severity, $file, $line);

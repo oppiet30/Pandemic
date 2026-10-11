@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/i18n.php';
 if (!$_COOKIE["user"]) {
     exit;
 } else {
@@ -6,7 +7,6 @@ if (!$_COOKIE["user"]) {
 }
 ;
 
-include 'headers.php';
 include 'controlos_jogo.php';
 
 $query = "SELECT * FROM jogo WHERE id ='" . $_GET['jogo'] . "' ";
@@ -27,12 +27,14 @@ if ($verifica_jogo) {
     }
 }
 ?>
-<!--<!DOCTYPE html>
-<html lang="en">-->
+<!DOCTYPE html>
+<html lang="<?php echo pandemic_locale(); ?>">
 <?php
 include('headers.php');
 include('functions.php');
 ?>
+<body>
+<?php include __DIR__ . '/language_selector.php'; ?>
 <div class="container">
     <!--<h1 id="titlexxx" style="display: inline-block"><a href="index.php" style="display: inline-block"><img id="logo" src="fundo.jpg"/>PANDEMIC</a></h1>-->
 </div>
@@ -235,3 +237,4 @@ if (!$verifica_jogo) {
 </script>
 
 </body>
+</html>

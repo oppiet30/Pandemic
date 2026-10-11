@@ -1,28 +1,30 @@
+<?php require_once __DIR__ . '/i18n.php'; ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo pandemic_locale(); ?>">
     <head>
         <title>Pandemic</title>
         <?php include('headers.php'); ?>
     </head>
     <body>
+        <?php include __DIR__ . '/language_selector.php'; ?>
         <header>
             <a href="index.php"><img id="logo" src="fundo.jpg"/></a>
             <h1 id="title">PANDEMIC</h1>
         </header>
         <div class="registo">
-            <h2>Reset password</h2>
+            <h2><?php echo pandemic_text('Reset password'); ?></h2>
             <form method="post" id="change_pass">
                 <div class="form-group">
-                    <label for="nickname">Username:</label>
+                    <label for="nickname"><?php echo pandemic_text('Username:'); ?></label>
                     <input type="text" class="form-control" id="nickname" name="nickname" required>
                     <br>
-                    <label for="email">Email:</label>
+                    <label for="email"><?php echo pandemic_text('Email:'); ?></label>
                     <input type="text" class="form-control" id="email" name="email" required>
                     <br>
-                    <label for="password">New password:</label>
+                    <label for="password"><?php echo pandemic_text('New password:'); ?></label>
                     <input type="password" class="form-control" id="password" name="password" required>
                     <br>
-                    <button type="button" onclick="" id="muda_password" class="btn btn-default">Change password</button>
+                    <button type="button" onclick="" id="muda_password" class="btn btn-default"><?php echo pandemic_text('Change password'); ?></button>
                 </div>
             </form>
         </div>
@@ -52,10 +54,10 @@
                     if (msg == "alterado") {
                         $('#change_pass').hide();
                          $(".sucesso").html("");
-                        $(".sucesso").append("<div>Password reset successfully. You can now log in.</div>");
+                        $(".sucesso").append(<?php echo pandemic_js_markup('<div>Password reset successfully. You can now log in.</div>'); ?>);
 
                     } else if (msg == "negado") {
-                        $(".sucesso").append("<div>Password reset failed. Check your username and email address.</div>");
+                        $(".sucesso").append(<?php echo pandemic_js_markup('<div>Password reset failed. Check your username and email address.</div>'); ?>);
                     }
                 }
             });

@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/i18n.php'; ?>
 
 <div class="col-lg-12">
     <div class="container-fluid">
@@ -9,10 +10,10 @@
 
                 <table id="tabela1">
                     <tr>
-                        <th>Game name</th>
-                        <th>Created by</th>
-                        <th>Description</th>
-                        <th>Game start</th>
+                        <th><?php echo pandemic_text('Game name'); ?></th>
+                        <th><?php echo pandemic_text('Created by'); ?></th>
+                        <th><?php echo pandemic_text('Description'); ?></th>
+                        <th><?php echo pandemic_text('Game start'); ?></th>
                     </tr>
                     <tr>
                         <td> <?php echo $linha['nome']; ?> </td>
@@ -36,9 +37,9 @@
 
                 <table id="tabela_surtos">
                     <tr>
-                        <th>Infection rate</th>
-                        <th>Outbreaks</th>
-                        <th>Research stations</th>
+                        <th><?php echo pandemic_text('Infection rate'); ?></th>
+                        <th><?php echo pandemic_text('Outbreaks'); ?></th>
+                        <th><?php echo pandemic_text('Research stations'); ?></th>
                     </tr>
                     <tr>
                         <td><?php echo $estado_infecao['velocidade'] ?></td>
@@ -50,16 +51,16 @@
                 <br>
                 <table id="tabela_curas">
                     <tr>
-                        <th class="Azul">Blue cure</th>
-                        <th class="Vermelho">Red cure</th>
-                        <th class="Preto">Black cure</th>
-                        <th class="Amarelo">Yellow cure</th>
+                        <th class="Azul"><?php echo pandemic_text('Blue cure'); ?></th>
+                        <th class="Vermelho"><?php echo pandemic_text('Red cure'); ?></th>
+                        <th class="Preto"><?php echo pandemic_text('Black cure'); ?></th>
+                        <th class="Amarelo"><?php echo pandemic_text('Yellow cure'); ?></th>
                     </tr>
                     <tr>
-                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Azul', $conn) ? "<span>Discovered!</span>" : "<span>Not discovered</span>") ?></td>
-                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Vermelho', $conn) ? "<span>Discovered!</span>" : "<span>Not discovered</span>") ?></td>
-                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Preto', $conn) ? "<span>Discovered!</span>" : "<span>Not discovered</span>") ?></td>
-                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Amarelo', $conn) ? "<span>Discovered!</span>" : "<span>Not discovered</span>") ?></td>
+                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Azul', $conn) ? pandemic_markup('<span>Discovered!</span>') : pandemic_markup('<span>Not discovered</span>')) ?></td>
+                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Vermelho', $conn) ? pandemic_markup('<span>Discovered!</span>') : pandemic_markup('<span>Not discovered</span>')) ?></td>
+                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Preto', $conn) ? pandemic_markup('<span>Discovered!</span>') : pandemic_markup('<span>Not discovered</span>')) ?></td>
+                        <td><?php echo(verificaSeDoencaEstaErradicada($_GET['jogo'], 'Amarelo', $conn) ? pandemic_markup('<span>Discovered!</span>') : pandemic_markup('<span>Not discovered</span>')) ?></td>
                     </tr>
                 </table>
             </div>
@@ -72,19 +73,19 @@
         <div class="col-lg-12">
             <?php if ($verifica_jogo['estado'] == 'Desistiram') { ?>
                 <div class="row game_over">
-                    <span >Game over!</span>
-                    <h4>The players gave up.</h4>
-                    <h4>The threat of global devastation was too much to bear.</h4>
-                    <h4>Better luck next time.</h4>
+                    <span ><?php echo pandemic_text('Game over!'); ?></span>
+                    <h4><?php echo pandemic_text('The players gave up.'); ?></h4>
+                    <h4><?php echo pandemic_text('The threat of global devastation was too much to bear.'); ?></h4>
+                    <h4><?php echo pandemic_text('Better luck next time.'); ?></h4>
                 </div>
             <?php } else if ($verifica_jogo['estado'] == 'Vitoria') { ?>
-                <span style="color: green">Victory!</span>
-                <h4>After all your hard work, humanity has a brighter future.</h4>
-                <h4>But will you be ready for the next epidemic?</h4>
+                <span style="color: green"><?php echo pandemic_text('Victory!'); ?></span>
+                <h4><?php echo pandemic_text('After all your hard work, humanity has a brighter future.'); ?></h4>
+                <h4><?php echo pandemic_text('But will you be ready for the next epidemic?'); ?></h4>
             <?php } else if ($verifica_jogo['estado'] == 'Derrota') { ?>
-                <span style="color: green">Game over!</span>
-                <h4>Despite your heroic efforts to save humanity, nature showed no mercy.</h4>
-                <h4>Perhaps things could have turned out differently...</h4>
+                <span style="color: green"><?php echo pandemic_text('Game over!'); ?></span>
+                <h4><?php echo pandemic_text('Despite your heroic efforts to save humanity, nature showed no mercy.'); ?></h4>
+                <h4><?php echo pandemic_text('Perhaps things could have turned out differently...'); ?></h4>
             <?php } ?>
         </div>
     </div>

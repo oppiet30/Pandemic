@@ -1,5 +1,6 @@
+<?php require_once __DIR__ . '/i18n.php'; ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo pandemic_locale(); ?>">
   <head>
     <title>Pandemic</title>
     <meta charset="utf-8">
@@ -10,18 +11,19 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
 <body>
+        <?php include __DIR__ . '/language_selector.php'; ?>
         <header>
             <a href="index.php"><img id="logo" src="fundo.jpg"/></a>
             <h1 id="title">PANDEMIC</h1>
         </header>
         <div class="registo">
-            <h2>Reset password</h2>
+            <h2><?php echo pandemic_text('Reset password'); ?></h2>
             <form action="send_recover.php" method="post" id="registar">
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email"><?php echo pandemic_text('Email'); ?></label>
                     <input type="email" class="form-control" name="email" required>
                     <br>
-                    <button type="submit" onclick="" class="btn btn-default">Send</button>
+                    <button type="submit" onclick="" class="btn btn-default"><?php echo pandemic_text('Send'); ?></button>
                 </div>
             </form>
         </div>
