@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <?php
     include('headers.php');
     include('functions.php');
@@ -16,18 +16,18 @@
             <h1 id="title">PANDEMIC</h1>
         </header>
         <div id="logs">
-            <button id="botao_logout" href="homepage.php">Voltar</button>
+            <button id="botao_logout" href="homepage.php">Back</button>
         </div>
 
 
         <div class="registo">
-            <h2>Lista de jogos</h2>
+            <h2>Game list</h2>
             <table border="1" id="lista_jogos">
-                <td class="cabecalho">Nome</td>
-                <td class="cabecalho">Descrição</td>
-                <td class="cabecalho">Nº de jogadores</td>
-                <td colspan="1" class="cabecalho">Criado por</td>
-                <td class="cabecalho">Opções</td>
+                <td class="cabecalho">Name</td>
+                <td class="cabecalho">Description</td>
+                <td class="cabecalho">Number of players</td>
+                <td colspan="1" class="cabecalho">Created by</td>
+                <td class="cabecalho">Options</td>
                 <tbody>
                     <?php
                     // se o número de resultados for maior que zero, mostra os dados
@@ -42,7 +42,7 @@
                                 <td><?php echo $linha['n_jogadores'] ?></td>
                                 <td><?php echo $linha['criador'] ?></td>
 
-                                <td><a href="jogo.php?jogo=<?php echo $linha['id'] ?>"><button id="juntar_jogo" class="btn btn-success"> Juntar a jogo</button></a></td>
+                                <td><a href="jogo.php?jogo=<?php echo $linha['id'] ?>"><button id="juntar_jogo" class="btn btn-success"> Join game</button></a></td>
 
                             </tr>
 

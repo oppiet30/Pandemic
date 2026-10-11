@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <?php
     include('headers.php');
     include('functions.php');
@@ -13,14 +13,14 @@
             ?>
             <div id="logs">
                 <a href="user_dash.php"><img class="icone" src="img_avatar2.png" style="width: 100px height: 100px" alt="Avatar"></a>
-                <button id="botao_logout" href="index.php">Logout</button>
+                <button id="botao_logout" href="index.php">Log out</button>
             </div>
 
             <div class="container">
                 <div class="col-lg-12">
-                    <button type="button" style="width: 500px; margin-left: 175px; margin-top: 50px;" class="btn btn-primary btn-lg" onclick="location.href = 'criar_jogo.php'">Criar jogo</button>
-                    <button type="button" style="width: 500px; margin-left: 175px;" class="btn btn-primary btn-lg" onclick="location.href = 'lista_jogos.php'">Juntar-me a jogo</button>
-                    <button type="button" style="width: 500px; margin-left: 175px;" class="btn btn-primary btn-lg" onclick="location.href = 'meus_jogos.php'">Os meus jogos</button>
+                    <button type="button" style="width: 500px; margin-left: 175px; margin-top: 50px;" class="btn btn-primary btn-lg" onclick="location.href = 'criar_jogo.php'">Create game</button>
+                    <button type="button" style="width: 500px; margin-left: 175px;" class="btn btn-primary btn-lg" onclick="location.href = 'lista_jogos.php'">Join a game</button>
+                    <button type="button" style="width: 500px; margin-left: 175px;" class="btn btn-primary btn-lg" onclick="location.href = 'meus_jogos.php'">My games</button>
                 </div>
             </div>
             <?php

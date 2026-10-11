@@ -3,30 +3,30 @@
         <div class="row">
             <table>
                 <tr>
-                    <th>Jogadores</th>
+                    <th>Players</th>
                 </tr>
                 <tr>
                     <td><?php echo $linha['criador']; ?></td>
                 </tr>
                 <tr>
-                    <td><?php echo ($linha['jogador2'] ? $linha['jogador2'] : "Lugar vago" ) ?></td>
+                    <td><?php echo ($linha['jogador2'] ? $linha['jogador2'] : "Open slot" ) ?></td>
                 </tr>
                 <tr>
-                    <td><?php echo ($linha['jogador3'] ? $linha['jogador3'] : "Lugar vago" ) ?></td>
+                    <td><?php echo ($linha['jogador3'] ? $linha['jogador3'] : "Open slot" ) ?></td>
                 </tr>
                 <tr>
-                    <td><?php echo ($linha['jogador4'] ? $linha['jogador4'] : "Lugar vago" ) ?></td>
+                    <td><?php echo ($linha['jogador4'] ? $linha['jogador4'] : "Open slot" ) ?></td>
                 </tr>
             </table>
             <?php if (!checkPlayer($_GET['jogo'], $nickname_jogador, $conn)) { ?>
-                <button class="join_game">Juntar-me a este jogo</button>
+                <button class="join_game">Join this game</button>
                 <?php
             }
             if ($nickname_jogador == $linha['criador'] && $linha['jogador2']) {
                 ?>
-                <button id="iniciar_jogo">Começar o jogo</button>
+                <button id="iniciar_jogo">Start game</button>
             <?php } else { ?>
-                <span>Aguarde para que se juntem mais pessoas...</span>
+                <span>Waiting for more players to join...</span>
             <?php }
             ?>
         </div>
@@ -40,10 +40,10 @@
 
                 <table id="tabela1">
                     <tr>
-                        <th>Nome do jogo</th>
-                        <th>Criado por</th>
-                        <th>Descrição</th>
-                        <th>Inicio do jogo</th>
+                        <th>Game name</th>
+                        <th>Created by</th>
+                        <th>Description</th>
+                        <th>Game start</th>
                     </tr>
                     <tr>
                         <td> <?php echo $linha['nome']; ?> </td>

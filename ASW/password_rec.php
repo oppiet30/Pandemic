@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>Pandemic</title>
         <?php include('headers.php'); ?>
@@ -10,19 +10,19 @@
             <h1 id="title">PANDEMIC</h1>
         </header>
         <div class="registo">
-            <h2>Recover</h2>
+            <h2>Reset password</h2>
             <form method="post" id="change_pass">
                 <div class="form-group">
-                    <label for="nickname">Nickname:</label>
+                    <label for="nickname">Username:</label>
                     <input type="text" class="form-control" id="nickname" name="nickname" required>
                     <br>
                     <label for="email">Email:</label>
                     <input type="text" class="form-control" id="email" name="email" required>
                     <br>
-                    <label for="password">Nova password:</label>
+                    <label for="password">New password:</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                     <br>
-                    <button type="button" onclick="" id="muda_password" class="btn btn-default">Mudar</button>
+                    <button type="button" onclick="" id="muda_password" class="btn btn-default">Change password</button>
                 </div>
             </form>
         </div>
@@ -52,10 +52,10 @@
                     if (msg == "alterado") {
                         $('#change_pass').hide();
                          $(".sucesso").html("");
-                        $(".sucesso").append("<div>Password reposta com sucesso. Pode efectuar o login.</div>");
+                        $(".sucesso").append("<div>Password reset successfully. You can now log in.</div>");
 
                     } else if (msg == "negado") {
-                        $(".sucesso").append("<div>Ocorreu um erro. Verifique se colocou um nickname e um e-mail válidos.</div>");
+                        $(".sucesso").append("<div>Password reset failed. Check your username and email address.</div>");
                     }
                 }
             });

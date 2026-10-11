@@ -28,7 +28,7 @@ if ($verifica_jogo) {
 }
 ?>
 <!--<!DOCTYPE html>
-<html>-->
+<html lang="en">-->
 <?php
 include('headers.php');
 include('functions.php');
