@@ -24,7 +24,8 @@ function migrationSnapshot($table) {
     return array(
         'rows' => migrationRows("SELECT * FROM `$table` ORDER BY id"),
         'columns' => migrationRows("SHOW FULL COLUMNS FROM `$table`"),
-        'indexes' => array_map(function ($row) { unset($row['Table']); return $row; }, migrationRows("SHOW INDEX FROM `$table`")),
+        // Cardinality is an optimizer estimate and can refresh during DDL.
+        'indexes' => array_map(function ($row) { unset($row['Table'], $row['Cardinality']); return $row; }, migrationRows("SHOW INDEX FROM `$table`")),
         'next_id' => migrationRows("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='$table'")
     );
 }
