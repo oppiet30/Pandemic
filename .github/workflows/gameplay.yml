@@ -1,0 +1,37 @@
+name: Gameplay regression tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    if: github.repository == 'oppiet30/Pandemic'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install PHP and MySQLi
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y php-cli php-mysql
+      - name: Check application PHP syntax
+        run: find ASW tests -name '*.php' -not -path 'ASW/PHPMailer/*' -print0 | xargs -0 -n1 php -l
+      - name: Run isolated database regressions
+        env:
+          MYSQL_TEST_HOST: 127.0.0.1
+          MYSQL_TEST_USER: root
+        run: php tests/gameplay.php

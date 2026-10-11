@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__ . '/display.php';
 
-include_once 'db_config.php';
+if (!isset($conn)) {
+    include_once 'db_config.php';
+}
 
 
 if (isset($_POST['funcao']) && $_POST['funcao'] == 'insert') {
@@ -105,7 +107,7 @@ function checkPlayer($id_jogo, $nick_jogador, $conn) {
  * @param string
  */
 
-function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3 = "", $jogador4 = "", $conn) {
+function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3, $jogador4, $conn) {
     $numero_jogadores = 2;
 
     if ($jogador3 != "") {
@@ -130,17 +132,6 @@ function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3 = "", $jogador4 =
             break;
     }
 
-    for ($contador = 0; $contador < $maximo_cartas; $contador++) {
-        rand_carta($jogador1, $id_jogo, $conn);
-        rand_carta($jogador2, $id_jogo, $conn);
-        if ($jogador3 != "") {
-            rand_carta($jogador3, $id_jogo, $conn);
-        }
-        if ($jogador4 != "") {
-            rand_carta($jogador4, $id_jogo, $conn);
-        }
-    }
-    infectaCidadesIniciais($id_jogo, $conn);
 
 
     $query_insercao = "INSERT INTO estado_jogo "
@@ -160,6 +151,9 @@ function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3 = "", $jogador4 =
             . "cidade_jogador4, "
             . "velocidade_infecao, "
             . "cartas_biscadas, "
+            . "centros_pesquisa, "
+            . "pilha_descarte, "
+            . "surtos, "
             . "jogadas)"
             . "VALUES('$id_jogo', "
             . "'Iniciado', "
@@ -177,12 +171,29 @@ function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3 = "", $jogador4 =
             . "'6', "
             . "'2', "
             . "'$cartas_biscadas', "
+            . "'6,', "
+            . "'', "
+            . "'0', "
             . "'0')";
 
     mysqli_query($conn, $query_insercao);
 
-    $query_inicia_tabela_doencas_erradicas = "INSERT INTO doencas_erradicas (id_jogo, `Amarelo`, `Azul`, `Preto`, `Vermelho`) VALUES($id_jogo, '0', '0', '0', '0')";
+    $query_inicia_tabela_doencas_erradicas = "INSERT INTO doencas_erradicadas (id_jogo, `Amarelo`, `Azul`, `Preto`, `Vermelho`) VALUES($id_jogo, '0', '0', '0', '0')";
     mysqli_query($conn, $query_inicia_tabela_doencas_erradicas);
+
+    // Card drawing reads the game discard pile, so initialize state first.
+    for ($contador = 0; $contador < $maximo_cartas; $contador++) {
+        rand_carta($jogador1, $id_jogo, $conn);
+        rand_carta($jogador2, $id_jogo, $conn);
+        if ($jogador3 != "") {
+            rand_carta($jogador3, $id_jogo, $conn);
+        }
+        if ($jogador4 != "") {
+            rand_carta($jogador4, $id_jogo, $conn);
+        }
+    }
+    infectaCidadesIniciais($id_jogo, $conn);
+
 }
 
 /*
@@ -196,8 +207,8 @@ function comecarJogo($id_jogo, $jogador1, $jogador2, $jogador3 = "", $jogador4 =
  */
 
 function insereCarta($carta, $id_carta, $cor, $id_jogo, $jogador, $conn) {
-    $query_insert_cartas = "INSERT INTO cartas_jogador (id_jogo, id_carta, id_jogador, carta, cor) VALUES('$id_jogo','$id_carta','$jogador', '$carta', '$cor') ";
-    mysqli_query($conn, $query_insert_cartas) or die(mysqli_error());
+    $query_insert_cartas = "INSERT INTO cartas_jogador (id_jogo, id_carta, id_jogador, carta, cor, ja_jogada) VALUES('$id_jogo','$id_carta','$jogador', '$carta', '$cor', 0) ";
+    mysqli_query($conn, $query_insert_cartas) or die(mysqli_error($conn));
 }
 
 /*
@@ -232,31 +243,10 @@ function rand_carta($jogador, $id_jogo, $conn) {
  */
 
 function infectaCidadesIniciais($id_jogo, $conn) {
-    for ($contador = 0; $contador < 3; $contador++) {
-        $id_a_inserir = rand(1, 40);
-        while (verificaCidadeInfectada($id_a_inserir, $id_jogo, $conn)) {
-            $id_a_inserir = rand(1, 40);
-        }
-        insereDoencasEmNovasCidades($id_a_inserir, $id_jogo, $conn, 3);
-    }
-
-
-    for ($contador = 0; $contador < 3; $contador++) {
-        $id_a_inserir = rand(1, 40);
-
-        while (verificaCidadeInfectada($id_a_inserir, $id_jogo, $conn)) {
-            $id_a_inserir = rand(1, 40);
-        }
-        insereDoencasEmNovasCidades($id_a_inserir, $id_jogo, $conn, 2);
-    }
-
-    for ($contador = 0; $contador < 3; $contador++) {
-        $id_a_inserir = rand(1, 40);
-
-        while (verificaCidadeInfectada($id_a_inserir, $id_jogo, $conn)) {
-            $id_a_inserir = rand(1, 40);
-        }
-        insereDoencasEmNovasCidades($id_a_inserir, $id_jogo, $conn);
+    $cidades = array_column(obterCidades($conn), 'id');
+    shuffle($cidades);
+    foreach (array_slice($cidades, 0, 9) as $indice => $id_cidade) {
+        insereDoencasEmNovasCidades($id_cidade, $id_jogo, $conn, 3 - intdiv($indice, 3));
     }
 }
 
@@ -296,7 +286,7 @@ function verificaSeDoencaEstaErradicada($id_jogo, $cor, $conn) {
         return false;
     }
     $doenca_erradicada = mysqli_fetch_row($executa_query);
-    if (intval($doenca_erradicada[0]) != 0) {
+    if ($doenca_erradicada && intval($doenca_erradicada[0]) != 0) {
         return true;
     } else {
         return false;
@@ -316,14 +306,8 @@ function verificaSeDoencaEstaErradicada($id_jogo, $cor, $conn) {
 function verificaCidadeInfectada($id_cidade, $id_jogo, $conn) {
     $query_verifica_cidadade_infectada = "SELECT * FROM cidades_infectadas WHERE id_cidade=$id_cidade AND id_jogo=$id_jogo";
     $executa_verificao = mysqli_query($conn, $query_verifica_cidadade_infectada);
-    if ($executa_verificao) {
-        $row = mysqli_fetch_assoc($executa_verificao);
-        if ($row['n_doencas'] > 0) {
-            return true;
-        }
-    } else {
-        return false;
-    }
+    $row = mysqli_fetch_assoc($executa_verificao);
+    return $row !== null && intval($row['n_doencas']) > 0;
 }
 
 /*
@@ -492,7 +476,7 @@ function separaCartasPorCor($id_jogo, $nickname, $conn) {
             case 'Azul' :
                 $cartas_azuis[] = $carta['id_carta'];
                 break;
-            case 'Amarelo' :
+            case 'Preto' :
                 $cartas_pretas[] = $carta['id_carta'];
                 break;
         }
@@ -535,14 +519,33 @@ function verificaSePodeCurarDoenca($id_jogo, $nickname, $conn) {
  */
 
 function curaDoenca($id_jogo, $cor, $jogador, $cartas, $conn) {
-    if (!verificaSeDoencaEstaErradicada($id_jogo, $cor, $conn)) {
+    if (!in_array($cor, array('Amarelo', 'Azul', 'Preto', 'Vermelho'), true)
+        || !is_array($cartas) || count(array_unique($cartas)) != 5
+        || verificaSeDoencaEstaErradicada($id_jogo, $cor, $conn)
+        || !verificaSePodeCurarDoenca($id_jogo, $jogador, $conn)) {
+        return false;
+    }
+    $cartas_disponiveis = separaCartasPorCor($id_jogo, $jogador, $conn);
+    if (array_diff($cartas, $cartas_disponiveis[$cor])) {
+        return false;
+    }
+    $id_jogo = intval($id_jogo);
+    $jogador = mysqli_real_escape_string($conn, $jogador);
+    mysqli_begin_transaction($conn);
+    try {
         mysqli_query($conn, "UPDATE doencas_erradicadas SET `$cor`=1 WHERE id_jogo=$id_jogo");
-        mysqli_query($conn, "DELETE FROM cidades_infectadas WHERE cor='$cor' ");
+        mysqli_query($conn, "DELETE FROM cidades_infectadas WHERE id_jogo=$id_jogo AND cor='$cor'");
         foreach ($cartas as $carta) {
-            mysqli_query($conn, "UPDATE cartas_jogador SET ja_jogada=1 WHERE id_carta='$carta' AND id_jogador='$jogador'");
+            $carta = intval($carta);
+            mysqli_query($conn, "UPDATE cartas_jogador SET ja_jogada=1 WHERE id_jogo=$id_jogo AND id_carta=$carta AND id_jogador='$jogador'");
         }
         incrementaNumeroJogadas($id_jogo, $conn);
+        mysqli_commit($conn);
+    } catch (Throwable $error) {
+        mysqli_rollback($conn);
+        throw $error;
     }
+    return true;
 }
 
 /*
@@ -773,7 +776,8 @@ function biscar($id_jogo, $nickname, $conn) {
     $estado_actual_infecoes = obtemVelocidadeInfecao($id_jogo, $conn);
     if ($estado_actual_infecoes['surtos'] <= 4) {
         $verifica_carta = rand(1, 45);
-        $cidade_com_surto = rand(1, 40);
+        $cidades = obterCidades($conn);
+        $cidade_com_surto = $cidades[array_rand($cidades)]['id'];
     } else {
         $verifica_carta = rand(1, 40);
     }
@@ -980,17 +984,15 @@ function getJogadaActual($jogo, $conn) {
 
 function infectaCidades($id_jogo, $conn) {
 
-    $cidades_a_infectar = array();
-    $estado_infeccao = obtemVelocidadeInfecao($id_jogo, $conn);
-    $contador = 0;
-    while ($contador < $estado_infeccao['velocidade']) {
-        $possivel_id = rand(1, 40);
-        while (in_array($possivel_id, $cidades_a_infectar) || verificaSeDoencaEstaErradicada($id_jogo, obterUmaCidade($possivel_id, $conn)[0]['cor'], $conn)) {
-            $possivel_id = rand(1, 40);
+    $cidades_elegiveis = array();
+    foreach (obterCidades($conn) as $cidade) {
+        if (!verificaSeDoencaEstaErradicada($id_jogo, $cidade['cor'], $conn)) {
+            $cidades_elegiveis[] = $cidade['id'];
         }
-        $cidades_a_infectar[] = $possivel_id;
-        $contador++;
     }
+    shuffle($cidades_elegiveis);
+    $estado_infeccao = obtemVelocidadeInfecao($id_jogo, $conn);
+    $cidades_a_infectar = array_slice($cidades_elegiveis, 0, $estado_infeccao['velocidade']);
 
     foreach ($cidades_a_infectar as $cidade) {
         if (verificaCidadeInfectada($cidade, $id_jogo, $conn)) {
@@ -1063,11 +1065,11 @@ function incrementaVelocidadeInfeccao($id_jogo, $conn) {
 
 function originaSurto($id_jogo, $id_cidade, $conn) {
     if (verificaCidadeInfectada($id_cidade, $id_jogo, $conn)) {
-        actualizaNumeroDoencas($row['id'], $id_jogo, 3, $conn);
+        actualizaNumeroDoencas($id_cidade, $id_jogo, 3, $conn);
         originaOutbreak($id_jogo, $id_cidade, $conn);
     } else {
-        insereNovaDoencaEmCidade($id_jogo, $row['id'], $conn);
-        actualizaNumeroDoencas($row['id'], $id_jogo, 3, $conn);
+        insereNovaDoencaEmCidade($id_jogo, $id_cidade, $conn);
+        actualizaNumeroDoencas($id_cidade, $id_jogo, 3, $conn);
     }
 }
 
@@ -1112,34 +1114,29 @@ function originaOutbreak($id_jogo, $id_cidade, $conn) {
  */
 
 function confirmaJogoADecorrer($id_jogo, $conn) {
-    $estado = '';
-
-    if (verificaSeDoencaEstaErradicada($id_jogo, "Vermelho", $conn) && verificaSeDoencaEstaErradicada($id_jogo, "Amarelho", $conn) && verificaSeDoencaEstaErradicada($id_jogo, "Azul", $conn) && verificaSeDoencaEstaErradicada($id_jogo, "Preto", $conn)) {
-        $estado = 'Vitoria';
-        mysqli_query($conn, "UPDATE estado_jogo SET estado='$estado' WHERE id_jogo=$id_jogo");
-//        return $estado;
-        echo json_encode(array('estado' => $estado));
-    } else {
-        $estado = 'Derrota';
-
-        $query_cartas_biscadas = "SELECT cartas_biscadas FROM estado_jogo WHERE id_jogo=$id_jogo";
-        $executa_query = mysqli_query($conn, $query_cartas_biscadas);
-        $row = mysqli_fetch_assoc($executa_query);
-        if ($row['cartas_biscadas'] >= 40) {
-            mysqli_query($conn, "UPDATE estado_jogo SET estado='Derrota' WHERE id_jogo=$id_jogo");
-//            return $estado;
-            echo json_encode(array('estado' => $estado));
+    $id_jogo = intval($id_jogo);
+    $row = mysqli_fetch_assoc(mysqli_query($conn, "SELECT estado, cartas_biscadas FROM estado_jogo WHERE id_jogo=$id_jogo"));
+    if (!$row) {
+        echo json_encode(array('estado' => ''));
+        return;
+    }
+    $estado = $row['estado'];
+    if ($estado == 'Iniciado') {
+        if (verificaSeDoencaEstaErradicada($id_jogo, 'Vermelho', $conn)
+            && verificaSeDoencaEstaErradicada($id_jogo, 'Amarelo', $conn)
+            && verificaSeDoencaEstaErradicada($id_jogo, 'Azul', $conn)
+            && verificaSeDoencaEstaErradicada($id_jogo, 'Preto', $conn)) {
+            $estado = 'Vitoria';
+        } else {
+            $infectadas = mysqli_query($conn, "SELECT id FROM cidades_infectadas WHERE id_jogo=$id_jogo");
+            if ($row['cartas_biscadas'] >= 40 || mysqli_num_rows($infectadas) >= 40) {
+                $estado = 'Derrota';
+            }
         }
-        $numero_cidades_infectadas = "SELECT * FROM cidades_infectadas WHERE id_jogo=$id_jogo";
-        $executa_query_cidades = mysqli_query($conn, $numero_cidades_infectadas);
-        $total_cidades_infectadas = mysqli_num_rows($executa_query_cidades);
-        if ($total_cidades_infectadas >= 40) {
-            mysqli_query($conn, "UPDATE estado_jogo SET estado='Derrota' WHERE id_jogo=$id_jogo");
-//            return $estado;
-            echo json_encode(array('estado' => $estado));
+        if ($estado != $row['estado']) {
+            mysqli_query($conn, "UPDATE estado_jogo SET estado='$estado' WHERE id_jogo=$id_jogo");
         }
     }
-    
-    $estado = mysqli_fetch_assoc(mysqli_query($conn, "SELECT estado FROM estado_jogo WHERE id_jogo=$id_jogo"))['estado'];
+    // Polling expects exactly one JSON document, including at victory/defeat.
     echo json_encode(array('estado' => $estado));
 }

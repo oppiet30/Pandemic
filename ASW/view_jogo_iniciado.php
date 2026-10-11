@@ -170,7 +170,7 @@
                 <button type="button" class="btn btn-info" id="fim_turno">End turn</button>
 
                 <div id="destinations"></div>
-                <?php if ($_COOKIE['user'] == $verifica_jogo['jogador1'] && $verifica_jogo['jogador1'] == obtemTurnoDoJogador($_GET['jogo'], $verifica_jogo['turno_jogador'], $conn)) { ?>
+                <?php if ($pode_criar_cura) { ?>
                     <div class="row" id="curar_doenca">
                         <h5>Choose the cards to play.</h5>
                         <?php
@@ -190,6 +190,8 @@
                         <button id="jogar_cartas">Play cards</button>
                         <button id="cancelar_jogada">Cancel</button>
                     </div>
+                <?php } ?>
+                <?php if ($_COOKIE['user'] == $verifica_jogo['jogador1']) { ?>
                     <div class="row">
                         <div class="col-lg-12">
                             <button class="btn btn-danger btn-lg" id="abrir_modal_desistir" data-toggle="modal" data-target="#modal_desistir">GIVE UP</button>
