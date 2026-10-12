@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `admin`
+-- Estrutura da tabela `admins`
 --
 
-CREATE TABLE `admin` (
+CREATE TABLE `admins` (
   `id` int(11) NOT NULL,
   `nome` text CHARACTER SET utf8 NOT NULL,
   `password` varchar(60) CHARACTER SET utf8 NOT NULL,
@@ -36,29 +36,29 @@ CREATE TABLE `admin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Extraindo dados da tabela `admin`
+-- Extraindo dados da tabela `admins`
 --
 
-INSERT INTO `admin` (`id`, `nome`, `password`, `email`) VALUES
+INSERT INTO `admins` (`id`, `nome`, `password`, `email`) VALUES
 (1, 'superadmin', 'qwerty123', 'admin@administracao@.pt');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `cartas`
+-- Estrutura da tabela `cards`
 --
 
-CREATE TABLE `cartas` (
+CREATE TABLE `cards` (
   `id` int(11) NOT NULL,
   `cidade` char(50) NOT NULL DEFAULT '',
   `cor` char(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Extraindo dados da tabela `cartas`
+-- Extraindo dados da tabela `cards`
 --
 
-INSERT INTO `cartas` (`id`, `cidade`, `cor`) VALUES
+INSERT INTO `cards` (`id`, `cidade`, `cor`) VALUES
 (1, 'Atlanta', 'Azul'),
 (2, 'Bagdad', 'Preto'),
 (3, 'Bangkok', 'Vermelho'),
@@ -113,10 +113,10 @@ INSERT INTO `cartas` (`id`, `cidade`, `cor`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `cartas_jogador`
+-- Estrutura da tabela `player_cards`
 --
 
-CREATE TABLE `cartas_jogador` (
+CREATE TABLE `player_cards` (
   `id` int(11) NOT NULL,
   `id_jogo` int(11) NOT NULL,
   `id_carta` int(11) NOT NULL,
@@ -127,10 +127,10 @@ CREATE TABLE `cartas_jogador` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `cartas_jogador`
+-- Extraindo dados da tabela `player_cards`
 --
 
-INSERT INTO `cartas_jogador` (`id`, `id_jogo`, `id_carta`, `id_jogador`, `carta`, `cor`, `ja_jogada`) VALUES
+INSERT INTO `player_cards` (`id`, `id_jogo`, `id_carta`, `id_jogador`, `carta`, `cor`, `ja_jogada`) VALUES
 (599, 7, 35, 'poni', 'Sedul', 'Vermelho', 0),
 (600, 7, 23, 'poni', 'Madrid', 'Azul', 0),
 (601, 7, 7, 'poni', 'Cairo', 'Preto', 0),
@@ -151,10 +151,10 @@ INSERT INTO `cartas_jogador` (`id`, `id_jogo`, `id_carta`, `id_jogador`, `carta`
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `cidades`
+-- Estrutura da tabela `cities`
 --
 
-CREATE TABLE `cidades` (
+CREATE TABLE `cities` (
   `id` int(11) NOT NULL,
   `nome` text NOT NULL,
   `cor` char(8) NOT NULL,
@@ -162,10 +162,10 @@ CREATE TABLE `cidades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `cidades`
+-- Extraindo dados da tabela `cities`
 --
 
-INSERT INTO `cidades` (`id`, `nome`, `cor`, `conexoes`) VALUES
+INSERT INTO `cities` (`id`, `nome`, `cor`, `conexoes`) VALUES
 (1, 'San Francisco', 'Azul', 'Los Angeles, Chicago, Tokyo, Manila'),
 (2, 'Washington', 'Azul', 'Atlanta, Montreal, New-york'),
 (3, 'Montreal', 'Azul', 'Chicago, New-York, Washington'),
@@ -209,10 +209,10 @@ INSERT INTO `cidades` (`id`, `nome`, `cor`, `conexoes`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `cidades_infectadas`
+-- Estrutura da tabela `city_infections`
 --
 
-CREATE TABLE `cidades_infectadas` (
+CREATE TABLE `city_infections` (
   `id` int(11) NOT NULL,
   `id_jogo` int(11) NOT NULL,
   `id_cidade` int(11) NOT NULL,
@@ -222,10 +222,10 @@ CREATE TABLE `cidades_infectadas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Extraindo dados da tabela `cidades_infectadas`
+-- Extraindo dados da tabela `city_infections`
 --
 
-INSERT INTO `cidades_infectadas` (`id`, `id_jogo`, `id_cidade`, `nome_cidade`, `n_doencas`, `cor`) VALUES
+INSERT INTO `city_infections` (`id`, `id_jogo`, `id_cidade`, `nome_cidade`, `n_doencas`, `cor`) VALUES
 (288, 7, 14, 'Mexico City', 1, 'Amarelo'),
 (289, 7, 10, 'Madrid', 1, 'Azul'),
 (290, 7, 39, 'Shanghai', 1, 'Vermelho'),
@@ -250,10 +250,10 @@ INSERT INTO `cidades_infectadas` (`id`, `id_jogo`, `id_cidade`, `nome_cidade`, `
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `doencas_erradicadas`
+-- Estrutura da tabela `disease_cures`
 --
 
-CREATE TABLE `doencas_erradicadas` (
+CREATE TABLE `disease_cures` (
   `id` int(11) NOT NULL,
   `id_jogo` int(11) NOT NULL,
   `Amarelo` tinyint(1) NOT NULL,
@@ -263,19 +263,19 @@ CREATE TABLE `doencas_erradicadas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Extraindo dados da tabela `doencas_erradicadas`
+-- Extraindo dados da tabela `disease_cures`
 --
 
-INSERT INTO `doencas_erradicadas` (`id`, `id_jogo`, `Amarelo`, `Azul`, `Preto`, `Vermelho`) VALUES
+INSERT INTO `disease_cures` (`id`, `id_jogo`, `Amarelo`, `Azul`, `Preto`, `Vermelho`) VALUES
 (1, 7, 1, 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `estado_jogo`
+-- Estrutura da tabela `game_states`
 --
 
-CREATE TABLE `estado_jogo` (
+CREATE TABLE `game_states` (
   `id` int(11) NOT NULL,
   `id_jogo` int(11) NOT NULL,
   `estado` text NOT NULL,
@@ -301,20 +301,20 @@ CREATE TABLE `estado_jogo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `estado_jogo`
+-- Extraindo dados da tabela `game_states`
 --
 
-INSERT INTO `estado_jogo` (`id`, `id_jogo`, `estado`, `n_jogadores`, `jogador1`, `jogador2`, `jogador3`, `jogador4`, `cidade_jogador1`, `cidade_jogador2`, `cidade_jogador3`, `cidade_jogador4`, `n_turnos`, `centros_pesquisa`, `jogadas`, `turno_jogador`, `cartas_biscadas`, `pilha_descarte`, `velocidade_infecao`, `surtos`, `mudar_velocidade`, `data_inicio`) VALUES
+INSERT INTO `game_states` (`id`, `id_jogo`, `estado`, `n_jogadores`, `jogador1`, `jogador2`, `jogador3`, `jogador4`, `cidade_jogador1`, `cidade_jogador2`, `cidade_jogador3`, `cidade_jogador4`, `n_turnos`, `centros_pesquisa`, `jogadas`, `turno_jogador`, `cartas_biscadas`, `pilha_descarte`, `velocidade_infecao`, `surtos`, `mudar_velocidade`, `data_inicio`) VALUES
 (22, 7, 'Iniciado', 2, 'poni', 'pinipon', '', '', 24, 6, 6, 6, 5, '4,24,', 0, 2, 20, '', 2, 0, 0, '2018-05-25'),
 (23, 8, 'Desistiram', 2, 'poni', 'pinipon', '', '', 6, 6, 6, 6, 1, '', 0, 1, 8, '', 2, 0, 0, '2018-05-27');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `jogo`
+-- Estrutura da tabela `games`
 --
 
-CREATE TABLE `jogo` (
+CREATE TABLE `games` (
   `id` int(11) NOT NULL,
   `n_jogadores` int(11) NOT NULL,
   `jogadores_actuais` tinyint(1) NOT NULL,
@@ -328,10 +328,10 @@ CREATE TABLE `jogo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Extraindo dados da tabela `jogo`
+-- Extraindo dados da tabela `games`
 --
 
-INSERT INTO `jogo` (`id`, `n_jogadores`, `jogadores_actuais`, `descricao`, `nome`, `criador`, `jogador2`, `jogador3`, `jogador4`, `data_comeco`) VALUES
+INSERT INTO `games` (`id`, `n_jogadores`, `jogadores_actuais`, `descricao`, `nome`, `criador`, `jogador2`, `jogador3`, `jogador4`, `data_comeco`) VALUES
 (7, 2, 2, 'Teste para geração de cartas', 'Teste Cartas', 'poni', 'pinipon', NULL, NULL, '2018-05-18'),
 (8, 2, 2, 'um dois tres', 'Teste mais recente', 'poni', 'pinipon', NULL, NULL, '2018-05-18'),
 (9, 4, 1, 'adasdasasdasda', 'Teste 3', 'poni', NULL, NULL, NULL, '2018-05-23'),
@@ -344,10 +344,10 @@ INSERT INTO `jogo` (`id`, `n_jogadores`, `jogadores_actuais`, `descricao`, `nome
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `user`
+-- Estrutura da tabela `users`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `nome` text CHARACTER SET utf8 NOT NULL,
   `apelido` text CHARACTER SET utf8 NOT NULL,
@@ -366,46 +366,46 @@ CREATE TABLE `user` (
 --
 
 --
--- Indexes for table `admin`
+-- Indexes for table `admins`
 --
-ALTER TABLE `admin`
+ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `cartas`
+-- Indexes for table `cards`
 --
-ALTER TABLE `cartas`
+ALTER TABLE `cards`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `cartas_jogador`
+-- Indexes for table `player_cards`
 --
-ALTER TABLE `cartas_jogador`
+ALTER TABLE `player_cards`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `cidades`
+-- Indexes for table `cities`
 --
-ALTER TABLE `cidades`
+ALTER TABLE `cities`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `cidades_infectadas`
+-- Indexes for table `city_infections`
 --
-ALTER TABLE `cidades_infectadas`
+ALTER TABLE `city_infections`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_jogo` (`id_jogo`);
 
 --
--- Indexes for table `doencas_erradicadas`
+-- Indexes for table `disease_cures`
 --
-ALTER TABLE `doencas_erradicadas`
+ALTER TABLE `disease_cures`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `estado_jogo`
+-- Indexes for table `game_states`
 --
-ALTER TABLE `estado_jogo`
+ALTER TABLE `game_states`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_jogo` (`id_jogo`),
   ADD KEY `cidade_jogador1` (`cidade_jogador1`),
@@ -414,15 +414,15 @@ ALTER TABLE `estado_jogo`
   ADD KEY `cidade_jogador3` (`cidade_jogador3`);
 
 --
--- Indexes for table `jogo`
+-- Indexes for table `games`
 --
-ALTER TABLE `jogo`
+ALTER TABLE `games`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user`
+-- Indexes for table `users`
 --
-ALTER TABLE `user`
+ALTER TABLE `users`
   ADD PRIMARY KEY (`id`,`email`);
 
 --
@@ -430,39 +430,39 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT for table `admin`
+-- AUTO_INCREMENT for table `admins`
 --
-ALTER TABLE `admin`
+ALTER TABLE `admins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `cartas_jogador`
+-- AUTO_INCREMENT for table `player_cards`
 --
-ALTER TABLE `cartas_jogador`
+ALTER TABLE `player_cards`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=615;
 
 --
--- AUTO_INCREMENT for table `cidades_infectadas`
+-- AUTO_INCREMENT for table `city_infections`
 --
-ALTER TABLE `cidades_infectadas`
+ALTER TABLE `city_infections`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=308;
 
 --
--- AUTO_INCREMENT for table `doencas_erradicadas`
+-- AUTO_INCREMENT for table `disease_cures`
 --
-ALTER TABLE `doencas_erradicadas`
+ALTER TABLE `disease_cures`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `estado_jogo`
+-- AUTO_INCREMENT for table `game_states`
 --
-ALTER TABLE `estado_jogo`
+ALTER TABLE `game_states`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT for table `jogo`
+-- AUTO_INCREMENT for table `games`
 --
-ALTER TABLE `jogo`
+ALTER TABLE `games`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
@@ -476,10 +476,10 @@ ALTER TABLE `user`
 --
 
 --
--- Limitadores para a tabela `estado_jogo`
+-- Limitadores para a tabela `game_states`
 --
-ALTER TABLE `estado_jogo`
-  ADD CONSTRAINT `estado_jogo_ibfk_1` FOREIGN KEY (`id_jogo`) REFERENCES `jogo` (`id`);
+ALTER TABLE `game_states`
+  ADD CONSTRAINT `estado_jogo_ibfk_1` FOREIGN KEY (`id_jogo`) REFERENCES `games` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

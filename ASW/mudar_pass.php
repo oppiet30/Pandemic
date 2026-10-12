@@ -18,12 +18,12 @@ if (isset($_POST['nickname']) && isset($_POST['email']) && isset($_POST['passwor
     $email = $_POST['email'];
     $password = crypt($password, "1234");
 
-    $query_verificacao = "SELECT * FROM user WHERE `nickname`='$nickname' AND email='$email'";
+    $query_verificacao = "SELECT * FROM users WHERE `nickname`='$nickname' AND email='$email'";
 
     $verifica_nicks = mysqli_query($conn, $query_verificacao) or die();
     $contador_linhas = mysqli_num_rows($verifica_nicks);
     if ($contador_linhas > 0) {
-        $novo_query = "UPDATE user SET password='$password' WHERE nickname='$nickname' AND email='$email'";
+        $novo_query = "UPDATE users SET password='$password' WHERE nickname='$nickname' AND email='$email'";
         $novo_result = mysqli_query($conn, $novo_query) or die();
         $autorizado = true;
     }

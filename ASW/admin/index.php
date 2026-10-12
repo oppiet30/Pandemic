@@ -41,7 +41,7 @@ if ($_COOKIE["admin"] == "") {
     if (isset($_POST['nome']) && isset($_POST['password'])) {
         $nome = $_POST['nome'];
         $password = $_POST['password'];
-        $query_admin = "SELECT nome, password FROM admin WHERE nome='$nome' AND password='$password'";
+        $query_admin = "SELECT nome, password FROM admins WHERE nome='$nome' AND password='$password'";
         $result_query = mysqli_query($conn, $query_admin) or die();
 //        while ($row = mysqli_fetch_assoc($result_query)) {
 //            defineNomeAdmin($row['nome']);

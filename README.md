@@ -63,6 +63,11 @@ the interface language does not translate or remove them.
 
 ### 3. Configure the connection
 
+**Upgrading an existing installation?** Follow the
+[English table migration instructions](migrations/README.md) before resuming
+web requests with this code. The bundled dump already uses English table names;
+existing databases require a one-time rename that retains accounts and games.
+
 Edit your local `ASW/db_config.php` and set:
 
 | Variable | Meaning |
@@ -151,9 +156,15 @@ creates a randomly named database, imports the schema and board metadata,
 and drops that database afterward. The tests do not import the sample accounts
 or historical games.
 
+Use `PANDEMIC_TEST_SCHEMA=migrated` to exercise gameplay on the original schema
+after the table migration. `php tests/migrations.php` with the same database
+environment tests forward and reverse renames, retained rows and metadata,
+foreign keys, and failed or repeated migration attempts using synthetic data.
+
 [GitHub Actions](https://github.com/oppiet30/Pandemic/actions) checks PHP syntax,
 translations, rendered JavaScript, and database regressions in both languages.
-The workflow uses GitHub-hosted runners and an isolated MariaDB service.
+The workflow tests fresh and migrated schemas in both languages, using
+GitHub-hosted runners and an isolated MariaDB service.
 
 ## Contributing
 

@@ -7,14 +7,14 @@ if (!isset($_COOKIE['admin'])) {
 }
 
 
-$query_lista = "SELECT * FROM user";
+$query_lista = "SELECT * FROM users";
 
 
 foreach ($_POST as $pesquisar => $dados) {
     if ($pesquisar == 'procurar') {
         $coluna_a_procurar = $dados;
     }
-    $query_lista = "SELECT * FROM user WHERE `$coluna_a_procurar`='$dados'";
+    $query_lista = "SELECT * FROM users WHERE `$coluna_a_procurar`='$dados'";
 }
 
 $result_lista = mysqli_query($conn, $query_lista) or die();

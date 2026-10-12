@@ -4,8 +4,9 @@ The player and administrator screens, game controls, registration forms,
 result messages and password-recovery email text support English and Portuguese.
 The application uses native PHP and MySQL/MariaDB, with `ASW` as its web directory.
 
-Database tables, column names, stored country/status/color values, form field
-names and API parameters retain their existing names. `display.php` translates
+Tables use English names; existing databases need the one-time
+[table migration](../migrations/README.md). Column names, stored country/status/color
+values, form field names and API parameters retain their existing names. `display.php` translates
 stored labels only when displaying them. Custom player names, game titles and
 descriptions are displayed as entered. Both languages share the same database
 and gameplay fixes; switching languages does not require a migration.

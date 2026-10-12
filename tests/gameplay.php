@@ -30,47 +30,51 @@ function poll($id) {
 }
 try {
     $dump = file_get_contents(__DIR__ . '/../asw024.sql');
-    preg_match_all('/CREATE TABLE `[^`]+`.*?;/s', $dump, $schema);
+    $schemaMode = getenv('PANDEMIC_TEST_SCHEMA') ?: 'fresh';
+    if (!in_array($schemaMode, array('fresh', 'migrated'), true)) throw new RuntimeException('Unknown test schema mode');
+    $schemaDump = $schemaMode === 'migrated' ? file_get_contents(__DIR__ . '/fixtures/legacy-schema.sql') : $dump;
+    preg_match_all('/CREATE TABLE `[^`]+`.*?;/s', $schemaDump, $schema);
     foreach ($schema[0] as $statement) mysqli_query($conn, $statement);
-    preg_match_all('/ALTER TABLE `[^`]+`.*?;/s', $dump, $alterations);
+    preg_match_all('/ALTER TABLE `[^`]+`.*?;/s', $schemaDump, $alterations);
     foreach ($alterations[0] as $statement) mysqli_query($conn, $statement);
+    if ($schemaMode === 'migrated') mysqli_query($conn, file_get_contents(__DIR__ . '/../migrations/001_english_table_names.sql'));
     // Only board metadata is seeded. No original user/admin or historical game rows are loaded.
-    foreach (array('cartas', 'cidades') as $table) {
+    foreach (array('cards', 'cities') as $table) {
         preg_match('/INSERT INTO `' . $table . '`.*?;/s', $dump, $seed);
         mysqli_query($conn, $seed[0]);
     }
     require __DIR__ . '/../ASW/controlos_jogo.php';
     require __DIR__ . '/../ASW/auth.php';
     for ($id = 1001; $id <= 1002; $id++) {
-        mysqli_query($conn, "INSERT INTO jogo (id,n_jogadores,jogadores_actuais,descricao,nome,criador,jogador2,data_comeco) VALUES ($id,2,2,'test','game$id','alice','bob','2026-10-10')");
+        mysqli_query($conn, "INSERT INTO games (id,n_jogadores,jogadores_actuais,descricao,nome,criador,jogador2,data_comeco) VALUES ($id,2,2,'test','game$id','alice','bob','2026-10-10')");
         comecarJogo($id, 'alice', 'bob', '', '', $conn);
     }
-    expect((int) scalar('SELECT COUNT(*) FROM doencas_erradicadas') === 2, 'Each started game has a cure row');
-    expect((int) scalar('SELECT COUNT(*) FROM cartas_jogador WHERE id_jogo=1001 AND ja_jogada=0') === 8, 'Initial cards work in strict SQL mode');
-    expect((int) scalar('SELECT COUNT(DISTINCT id_cidade) FROM cidades_infectadas WHERE id_jogo=1001') === 9, 'Nine distinct initial cities');
-    expect((int) scalar('SELECT SUM(n_doencas) FROM cidades_infectadas WHERE id_jogo=1001') === 18, 'Initial cube distribution is 3/2/1');
-    expect(scalar('SELECT centros_pesquisa FROM estado_jogo WHERE id_jogo=1001') === '6,', 'Initial Atlanta research station');
+    expect((int) scalar('SELECT COUNT(*) FROM disease_cures') === 2, 'Each started game has a cure row');
+    expect((int) scalar('SELECT COUNT(*) FROM player_cards WHERE id_jogo=1001 AND ja_jogada=0') === 8, 'Initial cards work in strict SQL mode');
+    expect((int) scalar('SELECT COUNT(DISTINCT id_cidade) FROM city_infections WHERE id_jogo=1001') === 9, 'Nine distinct initial cities');
+    expect((int) scalar('SELECT SUM(n_doencas) FROM city_infections WHERE id_jogo=1001') === 18, 'Initial cube distribution is 3/2/1');
+    expect(scalar('SELECT centros_pesquisa FROM game_states WHERE id_jogo=1001') === '6,', 'Initial Atlanta research station');
     expect(poll(1001) === 'Iniciado', 'In-progress polling returns one JSON object');
     mudaTurno(1001, 1, 1, $conn, 'alice');
-    expect((int) scalar('SELECT turno_jogador FROM estado_jogo WHERE id_jogo=1001') === 2, 'Turn advances to second player');
-    expect((int) scalar('SELECT jogadas FROM estado_jogo WHERE id_jogo=1001') === 0, 'New turn resets actions');
+    expect((int) scalar('SELECT turno_jogador FROM game_states WHERE id_jogo=1001') === 2, 'Turn advances to second player');
+    expect((int) scalar('SELECT jogadas FROM game_states WHERE id_jogo=1001') === 0, 'New turn resets actions');
 
     // Epidemics affect both previously infected and previously clean cities using the supplied ID.
-    mysqli_query($conn, 'DELETE FROM cidades_infectadas WHERE id_jogo=1001');
+    mysqli_query($conn, 'DELETE FROM city_infections WHERE id_jogo=1001');
     originaSurto(1001, 27, $conn);
-    expect((int) scalar('SELECT n_doencas FROM cidades_infectadas WHERE id_jogo=1001 AND id_cidade=27') === 3, 'Epidemic infects requested city');
+    expect((int) scalar('SELECT n_doencas FROM city_infections WHERE id_jogo=1001 AND id_cidade=27') === 3, 'Epidemic infects requested city');
     originaSurto(1001, 27, $conn);
-    expect((int) scalar('SELECT n_doencas FROM cidades_infectadas WHERE id_jogo=1001 AND id_cidade=27') === 3, 'Epidemic on existing city retains three cubes');
+    expect((int) scalar('SELECT n_doencas FROM city_infections WHERE id_jogo=1001 AND id_cidade=27') === 3, 'Epidemic on existing city retains three cubes');
 
     // Give the second player the same five black cards in two games, at a black research station.
-    mysqli_query($conn, 'DELETE FROM cartas_jogador');
+    mysqli_query($conn, 'DELETE FROM player_cards');
     foreach (array(1001, 1002) as $id) {
-        mysqli_query($conn, "UPDATE estado_jogo SET cidade_jogador2=27, centros_pesquisa='27,' WHERE id_jogo=$id");
+        mysqli_query($conn, "UPDATE game_states SET cidade_jogador2=27, centros_pesquisa='27,' WHERE id_jogo=$id");
         foreach (array(2,7,8,14,17) as $card) {
-            $row = mysqli_fetch_assoc(mysqli_query($conn, "SELECT cidade,cor FROM cartas WHERE id=$card"));
+            $row = mysqli_fetch_assoc(mysqli_query($conn, "SELECT cidade,cor FROM cards WHERE id=$card"));
             insereCarta($row['cidade'], $card, $row['cor'], $id, 'bob', $conn);
         }
-        mysqli_query($conn, "DELETE FROM cidades_infectadas WHERE id_jogo=$id AND cor='Preto'");
+        mysqli_query($conn, "DELETE FROM city_infections WHERE id_jogo=$id AND cor='Preto'");
         insereNovaDoencaEmCidade($id, 27, $conn);
     }
     expect(count(separaCartasPorCor(1001, 'bob', $conn)['Preto']) === 5, 'Black cards are classified correctly');
@@ -78,28 +82,28 @@ try {
     expect(curaDoenca(1001, 'Preto', 'bob', array(2,2,2,2,2), $conn) === false, 'Repeated card submissions are rejected');
     expect(curaDoenca(1001, 'Preto', 'bob', array(2,7,8,14,99), $conn) === false, 'Unowned cards are rejected');
     expect(curaDoenca(1001, 'Preto', 'bob', array(2,7,8,14,17), $conn), 'Valid cure succeeds');
-    expect((int) scalar("SELECT Preto FROM doencas_erradicadas WHERE id_jogo=1001") === 1, 'Cure flag saved');
-    expect((int) scalar("SELECT COUNT(*) FROM cidades_infectadas WHERE id_jogo=1001 AND cor='Preto'") === 0, 'Current-game cured cubes removed');
-    expect((int) scalar("SELECT COUNT(*) FROM cidades_infectadas WHERE id_jogo=1002 AND cor='Preto'") === 1, 'Other-game cubes preserved');
-    expect((int) scalar('SELECT SUM(ja_jogada) FROM cartas_jogador WHERE id_jogo=1002') === 0, 'Other-game cards preserved');
-    expect((int) scalar('SELECT SUM(ja_jogada) FROM cartas_jogador WHERE id_jogo=1001') === 5, 'Exactly five selected cards consumed');
+    expect((int) scalar("SELECT Preto FROM disease_cures WHERE id_jogo=1001") === 1, 'Cure flag saved');
+    expect((int) scalar("SELECT COUNT(*) FROM city_infections WHERE id_jogo=1001 AND cor='Preto'") === 0, 'Current-game cured cubes removed');
+    expect((int) scalar("SELECT COUNT(*) FROM city_infections WHERE id_jogo=1002 AND cor='Preto'") === 1, 'Other-game cubes preserved');
+    expect((int) scalar('SELECT SUM(ja_jogada) FROM player_cards WHERE id_jogo=1002') === 0, 'Other-game cards preserved');
+    expect((int) scalar('SELECT SUM(ja_jogada) FROM player_cards WHERE id_jogo=1001') === 5, 'Exactly five selected cards consumed');
 
-    mysqli_query($conn, 'UPDATE doencas_erradicadas SET Azul=1,Amarelo=1,Preto=1,Vermelho=1 WHERE id_jogo=1001');
+    mysqli_query($conn, 'UPDATE disease_cures SET Azul=1,Amarelo=1,Preto=1,Vermelho=1 WHERE id_jogo=1001');
     infectaCidades(1001, $conn); // Must terminate when no uncured cities remain.
     expect(poll(1001) === 'Vitoria', 'All four cures trigger victory');
-    mysqli_query($conn, 'UPDATE estado_jogo SET cartas_biscadas=40 WHERE id_jogo=1002');
+    mysqli_query($conn, 'UPDATE game_states SET cartas_biscadas=40 WHERE id_jogo=1002');
     expect(poll(1002) === 'Derrota', 'Deck limit triggers defeat with valid JSON');
-    mysqli_query($conn, "UPDATE estado_jogo SET estado='Desistiram' WHERE id_jogo=1002");
+    mysqli_query($conn, "UPDATE game_states SET estado='Desistiram' WHERE id_jogo=1002");
     expect(poll(1002) === 'Desistiram', 'Finished states are not overwritten');
 
     $hash = mysqli_real_escape_string($conn, password_hash('fixture-password', PASSWORD_BCRYPT));
-    mysqli_query($conn, "INSERT INTO user (id,nome,apelido,nickname,email,pais,password) VALUES (1,'Fixture','User','alice','fixture@example.invalid','Portugal','$hash')");
+    mysqli_query($conn, "INSERT INTO users (id,nome,apelido,nickname,email,pais,password) VALUES (1,'Fixture','User','alice','fixture@example.invalid','Portugal','$hash')");
     expect(pandemic_credentials_valid($conn, 'alice', 'fixture-password'), 'Correct password accepted');
     expect(!pandemic_credentials_valid($conn, 'alice', 'wrong'), 'Wrong password rejected');
     expect(!pandemic_credentials_valid($conn, 'missing', 'anything'), 'Unknown user rejected');
     expect(!pandemic_credentials_valid($conn, "' OR 1=1 -- ", 'fixture-password'), 'Username is bound as data');
     expect(!pandemic_credentials_valid($conn, array('alice'), 'fixture-password'), 'Malformed credentials rejected');
-    echo "$count gameplay and login assertions passed.\n";
+    echo "$count gameplay and login assertions passed ($schemaMode, " . $_COOKIE['pandemic_lang'] . ").\n";
 } finally {
     mysqli_query($conn, "DROP DATABASE `$database`");
     mysqli_close($conn);

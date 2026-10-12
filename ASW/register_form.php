@@ -10,7 +10,7 @@ $user_ja_existe = false;
 foreach ($_POST as $dados => $dado) {
     $campos_bd .= "`" . $dados . "`,";
     if ($dados == 'nickname') {
-        $query_verificacao = "SELECT * FROM user WHERE `nickname`='$dado'";
+        $query_verificacao = "SELECT * FROM users WHERE `nickname`='$dado'";
         $verifica_nicks = mysqli_query($conn, $query_verificacao) or die();
         $contador_linhas = mysqli_num_rows($verifica_nicks);
         if ($contador_linhas > 0) {
@@ -29,7 +29,7 @@ if (!$user_ja_existe) {
     $campos_bd = rtrim($campos_bd, ",");
     $valores_bd = rtrim($valores_bd, ",");
 
-    $novo_query = "INSERT INTO user ($campos_bd) VALUES($valores_bd)";
+    $novo_query = "INSERT INTO users ($campos_bd) VALUES($valores_bd)";
     $novo_result = mysqli_query($conn, $novo_query) or die();
     echo "success";
 } else {
