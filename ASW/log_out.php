@@ -1,7 +1,12 @@
 <?php
-session_start(); //to ensure you are using same session
+session_start();
+
+// Match the root path used when login_form.php sets the login cookie.
+setcookie('user', '', time() - 3600, '/');
 unset($_COOKIE['user']);
-session_destroy(); //destroy the session
-session_regenerate_id();
+
+$_SESSION = [];
+session_destroy();
+
 header('Location: /index.php');
-?>
+exit;
